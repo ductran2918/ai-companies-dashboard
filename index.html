@@ -175,6 +175,7 @@
            ============================================ */
         .companies-grid {
             display: grid;
+            /* Minimum 350px ensures company name, founders, and investors display comfortably */
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: var(--spacing-xl);
             margin-bottom: var(--spacing-xxl);
@@ -670,8 +671,10 @@
         const CONFIG = {
             GOOGLE_SHEET_ID: '1m5ghTUb146W0koJ4Hdt8DaugrgVr7NVyrt4cOECVPS0',
             SHEET_NAME: 'Sheet1',
-            AUTO_REFRESH_INTERVAL: 300000, // 5 minutes in milliseconds
-            REQUIRED_FIELD: 'Company Name'
+            AUTO_REFRESH_INTERVAL: 300000, // 5 minutes in milliseconds (300000ms = 5min)
+            REQUIRED_FIELD: 'Company Name',
+            SEARCH_DEBOUNCE_MS: 150, // Debounce delay for search input (milliseconds)
+            FALLBACK_CSV: 'sample-data.csv' // Fallback CSV if Google Sheets fails
         };
 
         /**
@@ -748,26 +751,49 @@
          */
         class DataService {
             /**
-             * Fetch data from Google Sheets
+             * Fetch data from Google Sheets with fallback to local CSV
              * @returns {Promise<Object[]>} Array of company objects
              */
             static async fetchFromGoogleSheets() {
-                const url = `https://docs.google.com/spreadsheets/d/${CONFIG.GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.SHEET_NAME}`;
-                
-                const response = await fetch(url);
-                
+                try {
+                    const url = `https://docs.google.com/spreadsheets/d/${CONFIG.GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.SHEET_NAME}`;
+
+                    const response = await fetch(url);
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data from Google Sheets. Please ensure your sheet is publicly accessible (Anyone with the link can view).');
+                    }
+
+                    const csvText = await response.text();
+
+                    if (!csvText || csvText.trim().length === 0) {
+                        throw new Error('No data found in Google Sheet. Please ensure your sheet has data.');
+                    }
+
+                    const companies = CSVParser.parse(csvText);
+
+                    // Filter out empty rows
+                    return companies.filter(c => c[CONFIG.REQUIRED_FIELD] && c[CONFIG.REQUIRED_FIELD].trim());
+                } catch (error) {
+                    console.warn('Google Sheets fetch failed, trying fallback CSV:', error.message);
+                    return await this.fetchFromLocalCSV();
+                }
+            }
+
+            /**
+             * Fetch data from local CSV file (fallback)
+             * @returns {Promise<Object[]>} Array of company objects
+             */
+            static async fetchFromLocalCSV() {
+                const response = await fetch(CONFIG.FALLBACK_CSV);
+
                 if (!response.ok) {
-                    throw new Error('Failed to fetch data from Google Sheets. Please ensure your sheet is publicly accessible (Anyone with the link can view).');
+                    throw new Error(`Failed to fetch fallback CSV file: ${CONFIG.FALLBACK_CSV}`);
                 }
 
                 const csvText = await response.text();
-                
-                if (!csvText || csvText.trim().length === 0) {
-                    throw new Error('No data found in Google Sheet. Please ensure your sheet has data.');
-                }
-
                 const companies = CSVParser.parse(csvText);
-                
+
                 // Filter out empty rows
                 return companies.filter(c => c[CONFIG.REQUIRED_FIELD] && c[CONFIG.REQUIRED_FIELD].trim());
             }
@@ -1146,6 +1172,7 @@
                 this.state = new AppState();
                 this.renderer = new UIRenderer(this.state);
                 this.refreshInterval = null;
+                this.searchTimeout = null; // For debouncing search input
             }
 
             /**
@@ -1179,10 +1206,13 @@
              * Setup event listeners
              */
             setupEventListeners() {
-                // Search input
+                // Search input with debouncing to improve performance
                 document.getElementById('search-input').addEventListener('input', (e) => {
-                    this.state.filter(e.target.value);
-                    this.renderer.renderCompanies();
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(() => {
+                        this.state.filter(e.target.value);
+                        this.renderer.renderCompanies();
+                    }, CONFIG.SEARCH_DEBOUNCE_MS);
                 });
 
                 // Sort buttons
@@ -1209,10 +1239,14 @@
 
             /**
              * Start auto-refresh interval
+             * Only refreshes when tab is visible to avoid unnecessary API calls
              */
             startAutoRefresh() {
                 this.refreshInterval = setInterval(() => {
-                    this.loadData();
+                    // Only refresh if tab is visible
+                    if (!document.hidden) {
+                        this.loadData();
+                    }
                 }, CONFIG.AUTO_REFRESH_INTERVAL);
             }
 

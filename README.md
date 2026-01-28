@@ -133,17 +133,23 @@ Required columns:
 
 - `index.html` - Main dashboard file (refactored with modular architecture)
 - `mobile-test.html` - Mobile viewport testing page
-- `sample-data.csv` - Sample data for Google Sheets import
+- `sample-data.csv` - Sample data for Google Sheets import (also used as fallback)
+- `current_data.csv` - Current data structure being tested
+- `optimized_data.csv` - Optimized data structure being tested
+- `.gitignore` - Git ignore rules for temporary and sensitive files
 
 ## Updating Content
 
 **To update dashboard content:**
 1. Edit your Google Sheet directly
 2. Changes appear automatically:
-   - Auto-refresh: Every 5 minutes
+   - Auto-refresh: Every 5 minutes (only when tab is visible)
    - Manual refresh: Press F5 or Cmd+R
 
 No code changes needed! Just edit the Google Sheet and refresh the page.
+
+**Fallback Mode:**
+If Google Sheets is unavailable, the dashboard automatically falls back to loading `sample-data.csv`. This ensures the dashboard always works, even offline.
 
 ## Troubleshooting
 
@@ -152,11 +158,13 @@ No code changes needed! Just edit the Google Sheet and refresh the page.
 2. Verify sheet is shared publicly ("Anyone with the link can view")
 3. Ensure first row has exact column headers
 4. Check browser console (F12) for detailed error messages
+5. If Google Sheets fails, dashboard will automatically load `sample-data.csv` as fallback
 
 **Data not updating?**
-1. Wait 5 minutes for auto-refresh
+1. Wait 5 minutes for auto-refresh (only refreshes when tab is visible)
 2. Manually refresh page (Ctrl+R or Cmd+R)
 3. Clear browser cache if needed
+4. Check if you're seeing fallback data (console will show warning)
 
 **Mobile UI issues?**
 1. Ensure viewport meta tag is present (already included)
@@ -167,13 +175,23 @@ No code changes needed! Just edit the Google Sheet and refresh the page.
 
 - **Framework:** Vanilla JavaScript (no dependencies)
 - **Architecture:** Modular class-based design
-- **Data Source:** Google Sheets CSV export (no API key required)
+- **Data Source:** Google Sheets CSV export (no API key required) with local CSV fallback
 - **Styling:** Pure CSS with CSS variables (design tokens)
 - **Responsive:** Mobile-first design with safe-area support
-- **Auto-refresh:** Configurable interval (default: 5 minutes)
+- **Auto-refresh:** Configurable interval (default: 5 minutes), only when tab is visible
+- **Performance:** Search debouncing (150ms) to reduce re-renders
+- **Error Recovery:** Automatic fallback to local CSV if Google Sheets fails
 - **Browser Support:** Modern browsers (Chrome, Firefox, Safari, Edge)
 
 ## Recent Updates
+
+**v2.1 (January 2026)**
+- ✅ Added .gitignore for better version control
+- ⚡ Performance: Added search debouncing (150ms) to reduce re-renders
+- 🔄 Smart auto-refresh: Only refreshes when tab is visible (saves API calls)
+- 🛡️ Error recovery: Automatic fallback to local CSV if Google Sheets fails
+- 📝 Better code documentation with inline comments for magic numbers
+- 🔧 Fixed mobile-test.html to use relative path (works in production)
 
 **v2.0 (January 2026)**
 - ✨ Complete codebase refactoring with modular architecture
