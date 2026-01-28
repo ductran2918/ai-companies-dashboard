@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Companies Founded by Chinese Entrepreneurs in Singapore</title>
+    <style>
+        /* ============================================
+           FONT CONFIGURATION - EDIT HERE FOR FONT STYLE
+           ============================================ */
+        :root {
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-mono: 'Courier New', monospace;
+            --font-size-base: 16px;
+            --font-size-small: 14px;
+            --font-size-large: 18px;
+            --font-size-xl: 24px;
+            --font-size-xxl: 32px;
+            --line-height: 1.6;
+        }
+
+        /* For CJK characters (Chinese, Japanese, Korean), use these fonts:
+           --font-family: 'Noto Sans CJK SC', 'Segoe UI', sans-serif;  (for Simplified Chinese)
+           --font-family: 'Noto Sans CJK TC', 'Segoe UI', sans-serif;  (for Traditional Chinese)
+           --font-family: 'Noto Sans CJK JP', 'Segoe UI', sans-serif;  (for Japanese)
+           --font-family: 'Noto Sans CJK KR', 'Segoe UI', sans-serif;  (for Korean)
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* ============================================
+           LAYOUT & STRUCTURE
+           ============================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            border-bottom: 1px solid #000000;
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: var(--font-size-xxl);
+            font-weight: 400;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: var(--font-size-large);
+            font-weight: 300;
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            font-size: var(--font-size-small);
+            color: #666666;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: #000000;
+        }
+
+        /* ============================================
+           CONTROLS & FILTERS
+           ============================================ */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            background-color: #ffffff;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sort-btn {
+            padding: 10px 15px;
+            border: 1px solid #cccccc;
+            background-color: #ffffff;
+            font-family: var(--font-family);
+            font-size: var(--font-size-small);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sort-btn:hover {
+            border-color: #000000;
+        }
+
+        .sort-btn.active {
+            border-color: #000000;
+            background-color: #f5f5f5;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-btn {
+            padding: 10px 12px;
+            border: 1px solid #cccccc;
+            background-color: #ffffff;
+            cursor: pointer;
+            font-family: var(--font-family);
+            font-size: var(--font-size-small);
+            transition: all 0.2s ease;
+        }
+
+        .view-btn:hover {
+            border-color: #000000;
+        }
+
+        .view-btn.active {
+            border-color: #000000;
+            background-color: #f5f5f5;
+        }
+
+        /* ============================================
+           COMPANY CARDS - GRID VIEW
+           ============================================ */
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .company-card {
+            border: 1px solid #cccccc;
+            padding: 25px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .company-card:hover {
+            border-color: #000000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .company-card.expanded {
+            grid-column: 1 / -1;
+        }
+
+        .company-header {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .company-link {
+            font-size: var(--font-size-small);
+            color: #666666;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .company-link:hover {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        .company-section {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            font-size: var(--font-size-small);
+            color: #000000;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-content {
+            font-size: var(--font-size-small);
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .founder-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .founder-tag {
+            padding: 6px 10px;
+            border: 1px solid #cccccc;
+            font-size: var(--font-size-small);
+            display: inline-block;
+            background-color: #f9f9f9;
+        }
+
+        .founder-tag a {
+            color: #666666;
+            text-decoration: none;
+        }
+
+        .founder-tag a:hover {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        .investor-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .investor-tag {
+            padding: 6px 10px;
+            border: 1px solid #cccccc;
+            font-size: var(--font-size-small);
+            background-color: #f9f9f9;
+            display: inline-block;
+        }
+
+        .expand-toggle {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            color: #666666;
+            font-size: var(--font-size-small);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .expand-toggle:hover {
+            color: #000000;
+        }
+
+        /* ============================================
+           TABLE VIEW
+           ============================================ */
+        .companies-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .companies-table.active {
+            display: table;
+        }
+
+        .companies-table thead {
+            border-bottom: 2px solid #000000;
+        }
+
+        .companies-table th {
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+            font-size: var(--font-size-small);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: #f9f9f9;
+        }
+
+        .companies-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: var(--font-size-small);
+            color: #666666;
+        }
+
+        .companies-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .companies-table a {
+            color: #666666;
+            text-decoration: none;
+        }
+
+        .companies-table a:hover {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           LOADING & STATUS
+           ============================================ */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666666;
+            font-size: var(--font-size-large);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #cccccc;
+            border-top-color: #000000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            padding: 20px;
+            border: 1px solid #cccccc;
+            background-color: #f9f9f9;
+            color: #666666;
+            margin-bottom: 20px;
+            font-size: var(--font-size-small);
+        }
+
+        .error-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            border-top: 1px solid #cccccc;
+            padding-top: 20px;
+            margin-top: 40px;
+            font-size: var(--font-size-small);
+            color: #999999;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .last-updated {
+            color: #999999;
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN - MOBILE
+           ============================================ */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .meta-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .sort-controls {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .companies-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .company-card.expanded {
+                grid-column: 1;
+            }
+
+            .companies-table {
+                font-size: 12px;
+            }
+
+            .companies-table th,
+            .companies-table td {
+                padding: 10px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px 10px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .company-name {
+                font-size: 18px;
+            }
+
+            .sort-btn,
+            .view-btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .companies-grid {
+                gap: 15px;
+            }
+
+            .company-card {
+                padding: 15px;
+            }
+
+            .companies-table {
+                font-size: 11px;
+            }
+
+            .companies-table th,
+            .companies-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Companies Founded by Chinese Entrepreneurs in Singapore</h1>
+            <p class="subtitle">High-potential AI startups positioning for billion-dollar growth</p>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <span class="meta-label">Total Companies</span>
+                    <span id="total-companies">—</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Total Disclosed Funding</span>
+                    <span id="total-funding">—</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Last Updated</span>
+                    <span id="last-updated">—</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <input 
+                type="text" 
+                id="search-input" 
+                class="search-box" 
+                placeholder="Search companies, founders, or investors..."
+            >
+            <div class="sort-controls">
+                <button class="sort-btn active" data-sort="name">Sort A-Z</button>
+                <button class="sort-btn" data-sort="funding">Sort by Funding</button>
+            </div>
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">Grid</button>
+                <button class="view-btn" data-view="table">Table</button>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Loading company data from Google Sheets...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;">
+            <div class="error-title">Error Loading Data</div>
+            <div id="error-message"></div>
+        </div>
+
+        <div id="companies-grid" class="companies-grid"></div>
+        <table id="companies-table" class="companies-table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Founders</th>
+                    <th>Investors</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+
+        <footer>
+            <div class="footer-content">
+                <div>Data sourced from verified research of 150+ sources</div>
+                <div class="last-updated">Last updated: <span id="footer-updated">—</span></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - EDIT GOOGLE SHEET ID HERE
+        // ============================================
+        // Replace with your Google Sheet ID
+        // To get your Sheet ID: Open your Google Sheet, copy the ID from the URL
+        // URL format: https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit
+        const GOOGLE_SHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE';
+        const SHEET_NAME = 'Sheet1';  // Change if your sheet has a different name
+
+        // ============================================
+        // DATA MANAGEMENT
+        // ============================================
+        let allCompanies = [];
+        let filteredCompanies = [];
+        let currentSort = 'name';
+        let currentView = 'grid';
+
+        // Fetch data from Google Sheets
+        async function fetchDataFromGoogleSheets() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+
+            try {
+                // Using Google Sheets API v4 with public access
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEET_ID}/values/${SHEET_NAME}?key=AIzaSyDaRr-qMVJqPfVhPxXLvP6RhJwLEfRBjhw`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data from Google Sheets. Please check your Sheet ID.');
+                }
+
+                const data = await response.json();
+                
+                if (!data.values || data.values.length < 2) {
+                    throw new Error('No data found in Google Sheet. Please ensure your sheet has data.');
+                }
+
+                // Parse the data
+                const headers = data.values[0];
+                const rows = data.values.slice(1);
+
+                allCompanies = rows.map(row => {
+                    const company = {};
+                    headers.forEach((header, index) => {
+                        company[header] = row[index] || '';
+                    });
+                    return company;
+                }).filter(c => c['Company Name']); // Filter out empty rows
+
+                filteredCompanies = [...allCompanies];
+                
+                loadingEl.style.display = 'none';
+                updateUI();
+                updateMetrics();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+                document.getElementById('error-message').textContent = error.message;
+            }
+        }
+
+        // ============================================
+        // UI RENDERING
+        // ============================================
+        function renderCompanies() {
+            const gridContainer = document.getElementById('companies-grid');
+            const tableBody = document.getElementById('table-body');
+            
+            gridContainer.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            if (filteredCompanies.length === 0) {
+                gridContainer.innerHTML = '<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #999;">No companies found matching your search.</div>';
+                return;
+            }
+
+            if (currentView === 'grid') {
+                filteredCompanies.forEach((company, index) => {
+                    const card = createCompanyCard(company, index);
+                    gridContainer.appendChild(card);
+                });
+            } else {
+                filteredCompanies.forEach(company => {
+                    const row = createTableRow(company);
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        function createCompanyCard(company, index) {
+            const card = document.createElement('div');
+            card.className = 'company-card';
+            card.innerHTML = `
+                <div class="company-header">
+                    <div class="company-name">${escapeHtml(company['Company Name'] || '')}</div>
+                    <a href="${company['Company LinkedIn'] || '#'}" target="_blank" class="company-link">
+                        ${company['Company LinkedIn'] ? 'View on LinkedIn' : 'No LinkedIn'}
+                    </a>
+                </div>
+
+                <div class="company-section">
+                    <div class="section-title">Founders</div>
+                    <div class="founder-list">
+                        ${parseFounders(company['Founders'] || '').map(founder => 
+                            `<div class="founder-tag">
+                                ${founder.url && founder.url !== '#' ? 
+                                    `<a href="${founder.url}" target="_blank">${escapeHtml(founder.name)}</a>` : 
+                                    escapeHtml(founder.name)
+                                }
+                            </div>`
+                        ).join('')}
+                    </div>
+                </div>
+
+                <div class="company-section">
+                    <div class="section-title">Investors</div>
+                    <div class="investor-list">
+                        ${(company['Investors'] || '').split(';').filter(i => i.trim()).map(investor => 
+                            `<div class="investor-tag">${escapeHtml(investor.trim())}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+
+                <div class="company-section">
+                    <div class="section-title">Description</div>
+                    <div class="section-content">${escapeHtml(company['Description'] || '')}</div>
+                </div>
+
+                <div class="expand-toggle" onclick="toggleCardExpand(this)">
+                    <span class="toggle-text">Show more details</span>
+                </div>
+
+                <div class="company-section" style="display: none;">
+                    <div class="section-title">China Background</div>
+                    <div class="section-content">${escapeHtml(company['China Background'] || '').replace(/\n/g, '<br>')}</div>
+                </div>
+
+                <div class="company-section" style="display: none;">
+                    <div class="section-title">Current Achievements</div>
+                    <div class="section-content">${escapeHtml(company['Current Achievements'] || '').replace(/\n/g, '<br>')}</div>
+                </div>
+            `;
+            return card;
+        }
+
+        function createTableRow(company) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <strong>${escapeHtml(company['Company Name'] || '')}</strong><br>
+                    <a href="${company['Company LinkedIn'] || '#'}" target="_blank" style="font-size: 12px;">
+                        ${company['Company LinkedIn'] ? 'LinkedIn' : '—'}
+                    </a>
+                </td>
+                <td>${parseFounders(company['Founders'] || '').map(f => escapeHtml(f.name)).join(', ')}</td>
+                <td>${(company['Investors'] || '').split(';').slice(0, 2).join('; ')}</td>
+                <td>${escapeHtml((company['Description'] || '').substring(0, 100))}</td>
+            `;
+            return row;
+        }
+
+        function parseFounders(foundersStr) {
+            // Parse founder string format: "Name (URL), Name (URL)"
+            if (!foundersStr) return [];
+            
+            const founders = [];
+            const parts = foundersStr.split(',');
+            
+            parts.forEach(part => {
+                const match = part.trim().match(/^(.+?)\s*\((.+?)\)$/);
+                if (match) {
+                    founders.push({
+                        name: match[1].trim(),
+                        url: match[2].trim()
+                    });
+                } else {
+                    founders.push({
+                        name: part.trim(),
+                        url: '#'
+                    });
+                }
+            });
+            
+            return founders;
+        }
+
+        function toggleCardExpand(element) {
+            const card = element.closest('.company-card');
+            const hiddenSections = card.querySelectorAll('.company-section[style*="display: none"]');
+            const toggleText = element.querySelector('.toggle-text');
+            
+            hiddenSections.forEach(section => {
+                if (section.style.display === 'none') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            
+            const isExpanded = hiddenSections[0].style.display !== 'none';
+            toggleText.textContent = isExpanded ? 'Show less details' : 'Show more details';
+        }
+
+        // ============================================
+        // SEARCH & FILTER
+        // ============================================
+        function filterCompanies(searchTerm) {
+            const term = searchTerm.toLowerCase();
+            
+            filteredCompanies = allCompanies.filter(company => {
+                const searchFields = [
+                    company['Company Name'] || '',
+                    company['Founders'] || '',
+                    company['Investors'] || '',
+                    company['Description'] || '',
+                    company['China Background'] || ''
+                ].join(' ').toLowerCase();
+                
+                return searchFields.includes(term);
+            });
+            
+            sortCompanies();
+            renderCompanies();
+        }
+
+        function sortCompanies() {
+            if (currentSort === 'name') {
+                filteredCompanies.sort((a, b) => 
+                    (a['Company Name'] || '').localeCompare(b['Company Name'] || '')
+                );
+            } else if (currentSort === 'funding') {
+                filteredCompanies.sort((a, b) => {
+                    const aFunding = extractFundingAmount(a['Current Achievements'] || '');
+                    const bFunding = extractFundingAmount(b['Current Achievements'] || '');
+                    return bFunding - aFunding;
+                });
+            }
+        }
+
+        function extractFundingAmount(text) {
+            const match = text.match(/\$(\d+(?:\.\d+)?)\s*(?:million|M)/i);
+            return match ? parseFloat(match[1]) : 0;
+        }
+
+        // ============================================
+        // METRICS
+        // ============================================
+        function updateMetrics() {
+            document.getElementById('total-companies').textContent = allCompanies.length;
+            
+            let totalFunding = 0;
+            allCompanies.forEach(company => {
+                totalFunding += extractFundingAmount(company['Current Achievements'] || '');
+            });
+            
+            document.getElementById('total-funding').textContent = 
+                totalFunding > 0 ? `$${totalFunding}M+` : 'Not disclosed';
+            
+            const now = new Date();
+            document.getElementById('last-updated').textContent = now.toLocaleDateString();
+            document.getElementById('footer-updated').textContent = now.toLocaleDateString();
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            filterCompanies(e.target.value);
+        });
+
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentSort = e.target.dataset.sort;
+                sortCompanies();
+                renderCompanies();
+            });
+        });
+
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentView = e.target.dataset.view;
+                
+                const gridView = document.getElementById('companies-grid');
+                const tableView = document.getElementById('companies-table');
+                
+                if (currentView === 'grid') {
+                    gridView.style.display = 'grid';
+                    tableView.classList.remove('active');
+                } else {
+                    gridView.style.display = 'none';
+                    tableView.classList.add('active');
+                }
+                
+                renderCompanies();
+            });
+        });
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateUI() {
+            renderCompanies();
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDataFromGoogleSheets();
+            
+            // Auto-refresh every 5 minutes (300000 ms)
+            setInterval(fetchDataFromGoogleSheets, 300000);
+        });
+    </script>
+</body>
+</html>
