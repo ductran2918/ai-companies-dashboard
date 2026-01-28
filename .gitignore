@@ -13,3 +13,7 @@ node_modules/
 # IDE
 .vscode/
 .idea/
+# Python
+__pycache__/
+*.pyc
+*.pyo

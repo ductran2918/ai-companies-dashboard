@@ -5,16 +5,27 @@
 ### Last Updated: 2026-01-28
 
 ## Overview
-Interactive web dashboard for displaying and filtering AI companies data from Google Sheets. Features automatic data refresh, search functionality, and responsive design optimized for both desktop and mobile viewing.
+Interactive web dashboard for displaying and filtering AI companies data from Google Sheets. Features automatic data refresh, search functionality, responsive design, and a comprehensive data editor with form-based CRUD operations.
+
+**NEW in v2.2:** Added web-based data editor with Flask backend API, enabling form-based company management without manual CSV editing.
 
 ## Project Architecture
 
 ### Technology Stack
-- **Frontend Framework**: Vanilla JavaScript (zero dependencies)
+
+#### Frontend
+- **Framework**: Vanilla JavaScript (zero dependencies)
 - **Architecture Pattern**: Modular class-based design
 - **Data Source**: Google Sheets CSV export with local CSV fallback
 - **Styling**: Pure CSS with CSS variables (design tokens)
 - **Browser Support**: Modern browsers (Chrome, Firefox, Safari, Edge)
+
+#### Backend (NEW in v2.2)
+- **Framework**: Flask (Python 3.7+)
+- **API**: RESTful endpoints for CRUD operations
+- **Storage**: CSV file with automatic backup system
+- **Security**: Input validation, XSS prevention, CSV injection protection
+- **Dependencies**: Flask==3.0.0, Flask-CORS==4.0.0, python-dotenv==1.0.0
 
 ### Core Components
 
@@ -110,6 +121,116 @@ try {
 
 ## Recent Updates
 
+### Version 2.2 (2026-01-28) - Data Editor Release
+
+**Major New Feature: Web-Based Data Editor**
+
+This release adds a comprehensive data management system with:
+- Form-based company editing interface
+- Flask REST API backend
+- Automatic backup system
+- Enhanced security features
+- Upgraded data schema (7 → 11 columns)
+
+**New Files:**
+1. **editor.html** (~400 lines) - Complete data editor interface with modals
+2. **js/api-client.js** (~150 lines) - API client for backend communication
+3. **js/editor.js** (~500 lines) - Editor application logic
+4. **backend/app.py** (~400 lines) - Flask API with CRUD endpoints
+5. **backend/models.py** (~300 lines) - CSV operations with backup
+6. **backend/validators.py** (~200 lines) - Input validation & security
+7. **backend/config.py** (~90 lines) - Configuration settings
+8. **backend/requirements.txt** - Python dependencies
+9. **migrate_data.py** (~200 lines) - 7-column to 11-column migration
+10. **test_backend.py** (~80 lines) - Backend functionality tests
+
+**Data Schema Upgrade (7 → 11 Columns):**
+
+New structured fields added:
+- **Total Funding (USD M)**: Funding amount in millions (extracted from text)
+- **Funding Stage**: Pre-seed, Seed, Angel, Series A/B/C+, etc.
+- **Founded Year**: Year company was founded
+- **Industry**: AI/ML, Biotech, Fintech, etc.
+
+Old achievements text was parsed to extract structured data. All companies migrated automatically with `migrate_data.py`.
+
+**Dashboard Enhancements:**
+- Added "Edit Data" button in header linking to editor
+- Display industry, funding stage, funding amount, and year as badges on company cards
+- Updated funding calculation to use structured field (with fallback to text extraction)
+- Added badge styles with color coding (industry = blue, stage = green, funding = orange, year = gray)
+
+**Backend API Endpoints:**
+```
+GET    /api/health                - Health check
+GET    /api/config                - Get dropdown options
+GET    /api/companies             - List all companies
+GET    /api/companies/:id         - Get single company
+POST   /api/companies             - Create new company
+PUT    /api/companies/:id         - Update company
+DELETE /api/companies/:id         - Delete company
+POST   /api/import                - Import CSV file
+GET    /api/export                - Export CSV file
+```
+
+**Security Features:**
+1. **Input Validation:**
+   - Required field checks (Company Name, Description)
+   - Data type validation (numeric, year format)
+   - URL format validation (LinkedIn URLs)
+   - Length limits (prevent buffer overflow)
+   - Whitelist validation for dropdowns
+
+2. **XSS Prevention:**
+   - Frontend: Use `textContent` instead of `innerHTML`
+   - Frontend: HTML escape function for user data
+   - Backend: Strip `<script>` tags via regex
+   - Backend: HTML entity encoding
+
+3. **CSV Injection Prevention:**
+   - Detect formula characters (`=`, `+`, `-`, `@`) at start
+   - Prefix with single quote to neutralize
+   - Prevents code execution in Excel/Sheets
+
+4. **File Upload Security:**
+   - Accept only `.csv` files
+   - 5MB file size limit
+   - Header validation before processing
+   - Reject malformed CSVs
+
+5. **Automatic Backups:**
+   - Backup created before every write operation
+   - Format: `sample-data_YYYYMMDD_HHMMSS.csv`
+   - Keep last 10 backups (auto-cleanup)
+   - Stored in `backend/backups/`
+
+**Testing:**
+All backend functionality tested and verified:
+- ✅ CSV read/write operations
+- ✅ Input validation (required fields, data types)
+- ✅ XSS prevention (script tag removal)
+- ✅ CSV injection prevention (formula escaping)
+- ✅ Backup creation and cleanup
+
+**Migration Process:**
+1. Original 7-column CSV backed up to `sample-data-backup-7col-*.csv`
+2. Funding amounts extracted from "Current Achievements" text
+3. Funding stages identified (Seed, Series A, etc.)
+4. Industries manually categorized based on descriptions
+5. Founded years extracted or manually added
+6. New 11-column CSV generated
+7. All 9 companies migrated successfully
+
+**Updated Files:**
+- `index.html`: Added editor link, badge display, structured field usage
+- `sample-data.csv`: Migrated to 11-column format
+- `README.md`: Comprehensive editor documentation
+- `.claude/CLAUDE.md`: This file (full v2.2 documentation)
+
+**Dependencies Added:**
+- Backend: Flask==3.0.0, Flask-CORS==4.0.0, python-dotenv==1.0.0
+- Frontend: No new dependencies (still zero-dependency)
+
 ### Version 2.1 (2026-01-28)
 
 **New Features:**
@@ -151,10 +272,24 @@ try {
 ```
 ai-companies-dashboard/
 ├── index.html                      # Main dashboard application
+├── editor.html                     # NEW: Data editor interface
 ├── mobile-test.html               # Mobile viewport testing page
-├── sample-data.csv                # Sample data & fallback CSV
-├── current_data.csv               # Current data structure for testing
-├── optimized_data.csv             # Optimized data structure for testing
+├── js/                            # NEW: JavaScript modules
+│   ├── api-client.js              # API client for backend
+│   └── editor.js                  # Editor application logic
+├── backend/                       # NEW: Flask API backend
+│   ├── app.py                     # Main Flask application
+│   ├── models.py                  # CSV CRUD operations
+│   ├── validators.py              # Input validation & security
+│   ├── config.py                  # Configuration settings
+│   ├── requirements.txt           # Python dependencies
+│   └── backups/                   # Automatic CSV backups
+├── sample-data.csv                # Main data file (11-column format)
+├── sample-data-backup-7col-*.csv  # Legacy 7-column backups
+├── migrate_data.py                # Migration script (7-col → 11-col)
+├── test_backend.py                # Backend functionality tests
+├── current_data.csv               # Test data file
+├── optimized_data.csv             # Optimized structure reference
 ├── .gitignore                     # Git ignore rules
 ├── README.md                      # User-facing documentation
 ├── CSV_STRUCTURE_COMPARISON.md    # Data structure comparison
@@ -164,19 +299,39 @@ ai-companies-dashboard/
     └── settings.local.json        # Claude Code local settings
 ```
 
-## Data Schema
+## Data Schema (11-Column Structure - NEW in v2.2)
 
-### Required CSV Columns
-- **Company Name** (required)
-- **Founders** (optional)
-- **Key Investors** (optional)
-- **Description** (optional)
+### CSV Columns
+
+| Column | Required | Type | Validation | Description |
+|--------|----------|------|------------|-------------|
+| Company Name | ✅ | String | Max 200 chars | Company name |
+| Company LinkedIn | | URL | Valid URL format | LinkedIn company page |
+| Founders | | String | Max 500 chars | Format: Name (URL), Name (URL) |
+| China Background | | String | Max 500 chars | Chinese heritage/experience |
+| **Total Funding (USD M)** | | **Number** | **0-10000** | **Funding in millions USD** |
+| **Funding Stage** | | **Dropdown** | **Whitelist** | **Pre-seed, Seed, Angel, Series A/B/C+, etc.** |
+| **Founded Year** | | **Number** | **1900-2099** | **Year founded** |
+| **Industry** | | **Dropdown** | **Whitelist** | **AI/ML, Biotech, Fintech, etc.** |
+| Current Achievements | | String | Max 500 chars | Recent milestones |
+| Investors | | String | Max 500 chars | Semicolon-separated list |
+| Description | ✅ | String | Max 1000 chars | What company does |
+
+**NEW in v2.2:** Four new structured fields (Total Funding, Funding Stage, Founded Year, Industry) were added for better data organization and visualization.
+
+### Dropdown Options
+
+**Funding Stages:**
+Pre-seed, Seed, Angel, Series A, Series A+, Series B, Series C+, Growth, IPO, Acquired, Not disclosed
+
+**Industries:**
+AI/ML, Biotech, Creative AI, Data Infrastructure, DevTools, Enterprise AI, Fintech, Healthcare, Media/Creative, Productivity, Security, Other
 
 ### Google Sheets Configuration
 - **Sheet ID**: `1m5ghTUb146W0koJ4Hdt8DaugrgVr7NVyrt4cOECVPS0`
 - **Sheet Name**: `Sheet1`
 - **Sharing**: Must be "Anyone with the link can view"
-- **Format**: First row must contain exact column headers
+- **Format**: First row must contain exact column headers (11 columns)
 
 ### CSV Export URL Format
 ```
@@ -186,18 +341,58 @@ https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHE
 ## Development Workflow
 
 ### Local Development
-1. **Start local server**:
-   ```bash
-   python3 -m http.server 8000
-   ```
-2. **Open dashboard**: http://localhost:8000
-3. **Test mobile view**: http://localhost:8000/mobile-test.html
+
+**Option 1: Dashboard Only (No Editor)**
+```bash
+# Start frontend server
+python3 -m http.server 8000
+
+# Open dashboard: http://localhost:8000
+# Test mobile: http://localhost:8000/mobile-test.html
+```
+
+**Option 2: Full Stack (Dashboard + Editor)**
+```bash
+# Terminal 1: Start backend
+cd backend
+pip install -r requirements.txt
+python app.py
+# Backend runs at http://localhost:5000
+
+# Terminal 2: Start frontend
+python3 -m http.server 8000
+# Dashboard: http://localhost:8000/index.html
+# Editor: http://localhost:8000/editor.html
+```
 
 ### Testing
+
+**Frontend Testing:**
 - **Desktop testing**: Open `index.html` in browser
 - **Mobile testing**: Use `mobile-test.html` for viewport simulation
-- **Data testing**: Modify `sample-data.csv` or `current_data.csv`
+- **Data testing**: Modify `sample-data.csv` or use editor
 - **Error testing**: Temporarily break Google Sheets ID to test fallback
+
+**Backend Testing:**
+```bash
+# Run backend tests
+python3 test_backend.py
+
+# Test API manually
+curl http://localhost:5000/api/health
+curl http://localhost:5000/api/companies
+```
+
+**End-to-End Testing:**
+1. Start backend server
+2. Start frontend server
+3. Open editor: http://localhost:8000/editor.html
+4. Add new company via form
+5. Verify CSV updated: `cat sample-data.csv`
+6. Verify backup created: `ls backend/backups/`
+7. Open dashboard: http://localhost:8000/index.html
+8. Verify new company appears with badges
+9. Test edit and delete operations
 
 ### Making Changes
 
@@ -343,6 +538,7 @@ FALLBACK_CSV: 'sample-data.csv',  // Change fallback CSV file
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.2 | 2026-01-28 | **Data Editor Release:** Web-based editor, Flask backend API, 11-column schema, badges, security features |
 | 2.1 | 2026-01-28 | Added search debouncing, smart refresh, CSV fallback, .gitignore |
 | 2.0 | 2026-01 | Complete refactor with modular architecture, mobile fixes |
 | 1.0 | 2025-12 | Initial release with basic functionality |

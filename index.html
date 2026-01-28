@@ -238,6 +238,46 @@
             letter-spacing: 0.5px;
         }
 
+        /* Badge styles for industry, funding stage, etc. */
+        .company-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: inline-block;
+        }
+
+        .badge.industry {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge.stage {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .badge.funding {
+            background: #fff3e0;
+            color: #f57c00;
+            font-weight: 700;
+        }
+
+        .badge.year {
+            background: #f5f5f5;
+            color: #616161;
+        }
+
         .section-content {
             font-size: var(--font-size-small);
             color: var(--color-secondary);
@@ -597,6 +637,9 @@
         <header>
             <h1>AI Companies Founded by Chinese Entrepreneurs in Singapore</h1>
             <p class="subtitle">High-potential AI startups positioning for billion-dollar growth</p>
+            <div style="margin-bottom: 20px;">
+                <a href="editor.html" style="display: inline-block; padding: 8px 16px; background: #000; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px;">✏️ Edit Data</a>
+            </div>
             <div class="meta-info">
                 <div class="meta-item">
                     <span class="meta-label">Total Companies</span>
@@ -674,7 +717,8 @@
             AUTO_REFRESH_INTERVAL: 300000, // 5 minutes in milliseconds (300000ms = 5min)
             REQUIRED_FIELD: 'Company Name',
             SEARCH_DEBOUNCE_MS: 150, // Debounce delay for search input (milliseconds)
-            FALLBACK_CSV: 'sample-data.csv' // Fallback CSV if Google Sheets fails
+            FALLBACK_CSV: 'sample-data.csv', // Fallback CSV if Google Sheets fails (11-column format)
+            API_BASE_URL: 'http://localhost:5000/api' // Backend API for editor
         };
 
         /**
@@ -1006,13 +1050,26 @@
             getCompanyCardHTML(company) {
                 const founders = CompanyParser.parseFounders(company['Founders'] || '');
                 const investors = (company['Investors'] || '').split(';').filter(i => i.trim());
-                
+
+                // Get new structured fields
+                const industry = company['Industry'] || '';
+                const fundingStage = company['Funding Stage'] || '';
+                const foundedYear = company['Founded Year'] || '';
+                const totalFunding = company['Total Funding (USD M)'] || '';
+
                 return `
                     <div class="company-header">
                         <div class="company-name">${UIUtils.escapeHtml(company['Company Name'] || '')}</div>
                         <a href="${company['Company LinkedIn'] || '#'}" target="_blank" class="company-link">
                             ${company['Company LinkedIn'] ? 'View on LinkedIn' : 'No LinkedIn'}
                         </a>
+                    </div>
+
+                    <div class="company-badges">
+                        ${industry ? `<span class="badge industry">${UIUtils.escapeHtml(industry)}</span>` : ''}
+                        ${fundingStage ? `<span class="badge stage">${UIUtils.escapeHtml(fundingStage)}</span>` : ''}
+                        ${totalFunding ? `<span class="badge funding">$${UIUtils.escapeHtml(totalFunding)}M</span>` : ''}
+                        ${foundedYear ? `<span class="badge year">Founded ${UIUtils.escapeHtml(foundedYear)}</span>` : ''}
                     </div>
 
                     <div class="company-section">
@@ -1088,15 +1145,25 @@
              */
             updateMetrics() {
                 document.getElementById('total-companies').textContent = this.state.allCompanies.length;
-                
+
+                // Calculate total funding using structured field (with fallback to text extraction)
                 let totalFunding = 0;
                 this.state.allCompanies.forEach(company => {
+                    // Try structured field first
+                    if (company['Total Funding (USD M)']) {
+                        const funding = parseFloat(company['Total Funding (USD M)']);
+                        if (!isNaN(funding)) {
+                            totalFunding += funding;
+                            return;
+                        }
+                    }
+                    // Fallback: extract from achievements text (legacy support)
                     totalFunding += CompanyParser.extractFundingAmount(company['Current Achievements'] || '');
                 });
-                
-                document.getElementById('total-funding').textContent = 
+
+                document.getElementById('total-funding').textContent =
                     totalFunding > 0 ? `$${totalFunding}M+` : 'Not disclosed';
-                
+
                 const now = new Date();
                 const dateStr = now.toLocaleDateString();
                 document.getElementById('last-updated').textContent = dateStr;
