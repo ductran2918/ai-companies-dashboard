@@ -6,9 +6,10 @@
     <title>AI Companies Founded by Chinese Entrepreneurs in Singapore</title>
     <style>
         /* ============================================
-           FONT CONFIGURATION - EDIT HERE FOR FONT STYLE
+           CSS VARIABLES - DESIGN TOKENS
            ============================================ */
         :root {
+            /* Typography */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --font-family-mono: 'Courier New', monospace;
             --font-size-base: 16px;
@@ -17,6 +18,27 @@
             --font-size-xl: 24px;
             --font-size-xxl: 32px;
             --line-height: 1.6;
+
+            /* Colors */
+            --color-primary: #000000;
+            --color-secondary: #666666;
+            --color-tertiary: #999999;
+            --color-border: #cccccc;
+            --color-background: #ffffff;
+            --color-background-light: #f9f9f9;
+            --color-background-hover: #f5f5f5;
+            --color-shadow: rgba(0, 0, 0, 0.08);
+
+            /* Spacing */
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+            --spacing-xxl: 40px;
+
+            /* Transitions */
+            --transition-fast: 0.2s ease;
         }
 
         /* For CJK characters (Chinese, Japanese, Korean), use these fonts:
@@ -26,6 +48,9 @@
            --font-family: 'Noto Sans CJK KR', 'Segoe UI', sans-serif;  (for Korean)
         */
 
+        /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
         * {
             margin: 0;
             padding: 0;
@@ -36,8 +61,10 @@
             font-family: var(--font-family);
             font-size: var(--font-size-base);
             line-height: var(--line-height);
-            background-color: #ffffff;
-            color: #000000;
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         /* ============================================
@@ -46,46 +73,46 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: var(--spacing-xxl) var(--spacing-lg);
         }
 
         header {
-            border-bottom: 1px solid #000000;
-            padding-bottom: 30px;
-            margin-bottom: 40px;
+            border-bottom: 1px solid var(--color-primary);
+            padding-bottom: var(--spacing-xl);
+            margin-bottom: var(--spacing-xxl);
         }
 
         h1 {
             font-size: var(--font-size-xxl);
             font-weight: 400;
-            margin-bottom: 10px;
+            margin-bottom: var(--spacing-sm);
             letter-spacing: -0.5px;
         }
 
         .subtitle {
             font-size: var(--font-size-large);
             font-weight: 300;
-            color: #666666;
-            margin-bottom: 20px;
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-lg);
         }
 
         .meta-info {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: var(--spacing-xl);
             font-size: var(--font-size-small);
-            color: #666666;
+            color: var(--color-secondary);
         }
 
         .meta-item {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: var(--spacing-xs);
         }
 
         .meta-label {
             font-weight: 600;
-            color: #000000;
+            color: var(--color-primary);
         }
 
         /* ============================================
@@ -94,72 +121,53 @@
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 40px;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xxl);
             align-items: center;
         }
 
         .search-box {
             flex: 1;
             min-width: 200px;
-            padding: 12px 15px;
-            border: 1px solid #cccccc;
+            padding: 12px var(--spacing-md);
+            border: 1px solid var(--color-border);
             font-family: var(--font-family);
             font-size: var(--font-size-base);
-            background-color: #ffffff;
+            background-color: var(--color-background);
+            transition: border-color var(--transition-fast);
         }
 
         .search-box:focus {
             outline: none;
-            border-color: #000000;
+            border-color: var(--color-primary);
         }
 
-        .sort-controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .sort-btn {
-            padding: 10px 15px;
-            border: 1px solid #cccccc;
-            background-color: #ffffff;
-            font-family: var(--font-family);
-            font-size: var(--font-size-small);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .sort-btn:hover {
-            border-color: #000000;
-        }
-
-        .sort-btn.active {
-            border-color: #000000;
-            background-color: #f5f5f5;
-        }
-
+        .sort-controls,
         .view-toggle {
             display: flex;
-            gap: 5px;
+            gap: var(--spacing-sm);
         }
 
+        .sort-btn,
         .view-btn {
-            padding: 10px 12px;
-            border: 1px solid #cccccc;
-            background-color: #ffffff;
-            cursor: pointer;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-background);
             font-family: var(--font-family);
             font-size: var(--font-size-small);
-            transition: all 0.2s ease;
+            cursor: pointer;
+            transition: all var(--transition-fast);
         }
 
+        .sort-btn:hover,
         .view-btn:hover {
-            border-color: #000000;
+            border-color: var(--color-primary);
         }
 
+        .sort-btn.active,
         .view-btn.active {
-            border-color: #000000;
-            background-color: #f5f5f5;
+            border-color: var(--color-primary);
+            background-color: var(--color-background-hover);
         }
 
         /* ============================================
@@ -168,22 +176,22 @@
         .companies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xxl);
         }
 
         .company-card {
-            border: 1px solid #cccccc;
+            border: 1px solid var(--color-border);
             padding: 25px;
-            transition: all 0.2s ease;
+            transition: all var(--transition-fast);
             cursor: pointer;
             display: flex;
             flex-direction: column;
         }
 
         .company-card:hover {
-            border-color: #000000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 12px var(--color-shadow);
         }
 
         .company-card.expanded {
@@ -191,9 +199,9 @@
         }
 
         .company-header {
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-md);
             border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 15px;
+            padding-bottom: var(--spacing-md);
         }
 
         .company-name {
@@ -205,24 +213,25 @@
 
         .company-link {
             font-size: var(--font-size-small);
-            color: #666666;
+            color: var(--color-secondary);
             text-decoration: none;
             word-break: break-all;
+            transition: color var(--transition-fast);
         }
 
         .company-link:hover {
-            color: #000000;
+            color: var(--color-primary);
             text-decoration: underline;
         }
 
         .company-section {
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-md);
         }
 
         .section-title {
             font-weight: 600;
             font-size: var(--font-size-small);
-            color: #000000;
+            color: var(--color-primary);
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -230,60 +239,54 @@
 
         .section-content {
             font-size: var(--font-size-small);
-            color: #666666;
+            color: var(--color-secondary);
             line-height: 1.5;
         }
 
-        .founder-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .founder-tag {
-            padding: 6px 10px;
-            border: 1px solid #cccccc;
-            font-size: var(--font-size-small);
-            display: inline-block;
-            background-color: #f9f9f9;
-        }
-
-        .founder-tag a {
-            color: #666666;
-            text-decoration: none;
-        }
-
-        .founder-tag a:hover {
-            color: #000000;
-            text-decoration: underline;
-        }
-
+        .founder-list,
         .investor-list {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
 
+        .founder-tag,
         .investor-tag {
-            padding: 6px 10px;
-            border: 1px solid #cccccc;
+            padding: 6px var(--spacing-sm);
+            border: 1px solid var(--color-border);
             font-size: var(--font-size-small);
-            background-color: #f9f9f9;
             display: inline-block;
+            background-color: var(--color-background-light);
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .founder-tag a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .founder-tag a:hover {
+            color: var(--color-primary);
+            text-decoration: underline;
         }
 
         .expand-toggle {
             margin-top: auto;
-            padding-top: 15px;
+            padding-top: var(--spacing-md);
             border-top: 1px solid #e0e0e0;
-            color: #666666;
+            color: var(--color-secondary);
             font-size: var(--font-size-small);
             cursor: pointer;
             user-select: none;
+            transition: color var(--transition-fast);
         }
 
         .expand-toggle:hover {
-            color: #000000;
+            color: var(--color-primary);
         }
 
         /* ============================================
@@ -292,7 +295,7 @@
         .companies-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 40px;
+            margin-bottom: var(--spacing-xxl);
             display: none;
         }
 
@@ -301,37 +304,38 @@
         }
 
         .companies-table thead {
-            border-bottom: 2px solid #000000;
+            border-bottom: 2px solid var(--color-primary);
         }
 
         .companies-table th {
             text-align: left;
-            padding: 15px;
+            padding: var(--spacing-md);
             font-weight: 600;
             font-size: var(--font-size-small);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            background-color: #f9f9f9;
+            background-color: var(--color-background-light);
         }
 
         .companies-table td {
-            padding: 15px;
+            padding: var(--spacing-md);
             border-bottom: 1px solid #e0e0e0;
             font-size: var(--font-size-small);
-            color: #666666;
+            color: var(--color-secondary);
         }
 
         .companies-table tr:hover {
-            background-color: #f9f9f9;
+            background-color: var(--color-background-light);
         }
 
         .companies-table a {
-            color: #666666;
+            color: var(--color-secondary);
             text-decoration: none;
+            transition: color var(--transition-fast);
         }
 
         .companies-table a:hover {
-            color: #000000;
+            color: var(--color-primary);
             text-decoration: underline;
         }
 
@@ -340,8 +344,8 @@
            ============================================ */
         .loading {
             text-align: center;
-            padding: 40px;
-            color: #666666;
+            padding: var(--spacing-xxl);
+            color: var(--color-secondary);
             font-size: var(--font-size-large);
         }
 
@@ -349,11 +353,11 @@
             display: inline-block;
             width: 30px;
             height: 30px;
-            border: 2px solid #cccccc;
-            border-top-color: #000000;
+            border: 2px solid var(--color-border);
+            border-top-color: var(--color-primary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-md);
         }
 
         @keyframes spin {
@@ -361,11 +365,11 @@
         }
 
         .error {
-            padding: 20px;
-            border: 1px solid #cccccc;
-            background-color: #f9f9f9;
-            color: #666666;
-            margin-bottom: 20px;
+            padding: var(--spacing-lg);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-background-light);
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-lg);
             font-size: var(--font-size-small);
         }
 
@@ -378,61 +382,104 @@
            FOOTER
            ============================================ */
         footer {
-            border-top: 1px solid #cccccc;
-            padding-top: 20px;
-            margin-top: 40px;
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-lg);
+            margin-top: var(--spacing-xxl);
             font-size: var(--font-size-small);
-            color: #999999;
+            color: var(--color-tertiary);
         }
 
         .footer-content {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: var(--spacing-lg);
         }
 
         .last-updated {
-            color: #999999;
+            color: var(--color-tertiary);
         }
 
         /* ============================================
-           RESPONSIVE DESIGN - MOBILE
+           RESPONSIVE DESIGN
            ============================================ */
         @media (max-width: 768px) {
             .container {
-                padding: 20px 15px;
+                padding: var(--spacing-lg) var(--spacing-md);
+                padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+            }
+
+            header {
+                padding-top: var(--spacing-md);
             }
 
             h1 {
                 font-size: 24px;
+                line-height: 1.2;
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .subtitle {
+                font-size: var(--font-size-base);
+                margin-bottom: var(--spacing-md);
             }
 
             .meta-info {
                 flex-direction: column;
-                gap: 15px;
+                gap: var(--spacing-md);
             }
 
             .controls {
                 flex-direction: column;
+                gap: var(--spacing-md);
+                align-items: stretch;
             }
 
             .search-box {
                 min-width: 100%;
+                width: 100%;
             }
 
-            .sort-controls {
+            .sort-controls,
+            .view-toggle {
                 width: 100%;
-                flex-wrap: wrap;
+                display: flex;
+                gap: var(--spacing-sm);
+                justify-content: flex-start;
+            }
+
+            .sort-btn,
+            .view-btn {
+                flex: 1;
+                min-width: 0;
+                text-align: center;
             }
 
             .companies-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: var(--spacing-lg);
+            }
+
+            .company-card {
+                padding: var(--spacing-md);
             }
 
             .company-card.expanded {
                 grid-column: 1;
+            }
+
+            .founder-list,
+            .investor-list {
+                gap: 6px;
+            }
+
+            .founder-tag,
+            .investor-tag {
+                font-size: 11px;
+                padding: 5px 8px;
+                word-break: break-word;
+                max-width: 100%;
             }
 
             .companies-table {
@@ -441,7 +488,7 @@
 
             .companies-table th,
             .companies-table td {
-                padding: 10px;
+                padding: var(--spacing-sm);
             }
 
             .footer-content {
@@ -451,42 +498,95 @@
 
         @media (max-width: 480px) {
             .container {
-                padding: 15px 10px;
+                padding: var(--spacing-md) var(--spacing-sm);
+                padding-left: max(var(--spacing-sm), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-sm), env(safe-area-inset-right));
+            }
+
+            header {
+                padding-top: var(--spacing-sm);
+                padding-bottom: var(--spacing-md);
+                margin-bottom: var(--spacing-lg);
             }
 
             h1 {
                 font-size: 20px;
+                line-height: 1.2;
+                margin-bottom: var(--spacing-xs);
             }
 
             .subtitle {
-                font-size: 14px;
+                font-size: var(--font-size-small);
+                margin-bottom: var(--spacing-sm);
             }
 
-            .company-name {
-                font-size: 18px;
+            .meta-info {
+                gap: var(--spacing-sm);
+                font-size: 12px;
+            }
+
+            .controls {
+                gap: var(--spacing-sm);
+            }
+
+            .search-box {
+                padding: 10px var(--spacing-sm);
+                font-size: var(--font-size-small);
             }
 
             .sort-btn,
             .view-btn {
-                padding: 8px 10px;
-                font-size: 12px;
+                padding: 8px var(--spacing-sm);
+                font-size: 11px;
+                flex: 1;
             }
 
-            .companies-grid {
-                gap: 15px;
+            .company-name {
+                font-size: var(--font-size-large);
+                line-height: 1.3;
             }
 
             .company-card {
-                padding: 15px;
+                padding: var(--spacing-sm);
+            }
+
+            .section-title {
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+
+            .section-content {
+                font-size: 11px;
+            }
+
+            .founder-list,
+            .investor-list {
+                gap: 4px;
+            }
+
+            .founder-tag,
+            .investor-tag {
+                font-size: 10px;
+                padding: 4px 6px;
+                line-height: 1.3;
+            }
+
+            .companies-grid {
+                gap: var(--spacing-sm);
             }
 
             .companies-table {
-                font-size: 11px;
+                font-size: 10px;
             }
 
             .companies-table th,
             .companies-table td {
-                padding: 8px;
+                padding: 6px;
+            }
+
+            .expand-toggle {
+                font-size: 11px;
+                padding-top: var(--spacing-sm);
             }
         }
     </style>
@@ -518,29 +618,30 @@
                 id="search-input" 
                 class="search-box" 
                 placeholder="Search companies, founders, or investors..."
+                aria-label="Search companies"
             >
             <div class="sort-controls">
-                <button class="sort-btn active" data-sort="name">Sort A-Z</button>
-                <button class="sort-btn" data-sort="funding">Sort by Funding</button>
+                <button class="sort-btn active" data-sort="name" aria-label="Sort by name">Sort A-Z</button>
+                <button class="sort-btn" data-sort="funding" aria-label="Sort by funding">Sort by Funding</button>
             </div>
             <div class="view-toggle">
-                <button class="view-btn active" data-view="grid">Grid</button>
-                <button class="view-btn" data-view="table">Table</button>
+                <button class="view-btn active" data-view="grid" aria-label="Grid view">Grid</button>
+                <button class="view-btn" data-view="table" aria-label="Table view">Table</button>
             </div>
         </div>
 
-        <div id="loading" class="loading" style="display: none;">
-            <div class="loading-spinner"></div>
+        <div id="loading" class="loading" style="display: none;" role="status" aria-live="polite">
+            <div class="loading-spinner" aria-hidden="true"></div>
             <p>Loading company data from Google Sheets...</p>
         </div>
 
-        <div id="error" class="error" style="display: none;">
+        <div id="error" class="error" style="display: none;" role="alert">
             <div class="error-title">Error Loading Data</div>
             <div id="error-message"></div>
         </div>
 
-        <div id="companies-grid" class="companies-grid"></div>
-        <table id="companies-table" class="companies-table">
+        <div id="companies-grid" class="companies-grid" role="main"></div>
+        <table id="companies-table" class="companies-table" role="table">
             <thead>
                 <tr>
                     <th>Company</th>
@@ -561,334 +662,577 @@
     </div>
 
     <script>
-        // ============================================
-        // CONFIGURATION - EDIT GOOGLE SHEET ID HERE
-        // ============================================
-        // Replace with your Google Sheet ID
-        // To get your Sheet ID: Open your Google Sheet, copy the ID from the URL
-        // URL format: https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit
-        const GOOGLE_SHEET_ID = '1m5ghTUb146W0koJ4Hdt8DaugrgVr7NVyrt4cOECVPS0';
-        const SHEET_NAME = 'Sheet1';  // Change if your sheet has a different name
+        /**
+         * ============================================
+         * CONFIGURATION
+         * ============================================
+         */
+        const CONFIG = {
+            GOOGLE_SHEET_ID: '1m5ghTUb146W0koJ4Hdt8DaugrgVr7NVyrt4cOECVPS0',
+            SHEET_NAME: 'Sheet1',
+            AUTO_REFRESH_INTERVAL: 300000, // 5 minutes in milliseconds
+            REQUIRED_FIELD: 'Company Name'
+        };
 
-        // ============================================
-        // DATA MANAGEMENT
-        // ============================================
-        let allCompanies = [];
-        let filteredCompanies = [];
-        let currentSort = 'name';
-        let currentView = 'grid';
+        /**
+         * ============================================
+         * CSV PARSER UTILITY
+         * ============================================
+         */
+        class CSVParser {
+            /**
+             * Parse a CSV line handling quoted fields with commas
+             * @param {string} line - CSV line to parse
+             * @returns {string[]} Array of parsed fields
+             */
+            static parseLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    
+                    if (char === '"') {
+                        if (inQuotes && line[i + 1] === '"') {
+                            // Escaped quote
+                            current += '"';
+                            i++;
+                        } else {
+                            // Toggle quote state
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        // Field separator
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                
+                // Add the last field
+                result.push(current.trim());
+                return result;
+            }
 
-        // Fetch data from Google Sheets
-        async function fetchDataFromGoogleSheets() {
-            const loadingEl = document.getElementById('loading');
-            const errorEl = document.getElementById('error');
-            
-            loadingEl.style.display = 'block';
-            errorEl.style.display = 'none';
+            /**
+             * Parse CSV text into structured data
+             * @param {string} csvText - Raw CSV text
+             * @returns {Object[]} Array of objects with headers as keys
+             */
+            static parse(csvText) {
+                const lines = csvText.split('\n').filter(line => line.trim());
+                
+                if (lines.length < 2) {
+                    throw new Error('CSV must have at least a header row and one data row');
+                }
 
-            try {
-                // Using Google Sheets API v4 with public access
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEET_ID}/values/${SHEET_NAME}?key=AIzaSyDaRr-qMVJqPfVhPxXLvP6RhJwLEfRBjhw`;
+                const headers = this.parseLine(lines[0]);
+                const rows = lines.slice(1).map(line => this.parseLine(line));
+
+                return rows.map(row => {
+                    const obj = {};
+                    headers.forEach((header, index) => {
+                        obj[header] = row[index] || '';
+                    });
+                    return obj;
+                });
+            }
+        }
+
+        /**
+         * ============================================
+         * DATA SERVICE
+         * ============================================
+         */
+        class DataService {
+            /**
+             * Fetch data from Google Sheets
+             * @returns {Promise<Object[]>} Array of company objects
+             */
+            static async fetchFromGoogleSheets() {
+                const url = `https://docs.google.com/spreadsheets/d/${CONFIG.GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.SHEET_NAME}`;
                 
                 const response = await fetch(url);
                 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch data from Google Sheets. Please check your Sheet ID.');
+                    throw new Error('Failed to fetch data from Google Sheets. Please ensure your sheet is publicly accessible (Anyone with the link can view).');
                 }
 
-                const data = await response.json();
+                const csvText = await response.text();
                 
-                if (!data.values || data.values.length < 2) {
+                if (!csvText || csvText.trim().length === 0) {
                     throw new Error('No data found in Google Sheet. Please ensure your sheet has data.');
                 }
 
-                // Parse the data
-                const headers = data.values[0];
-                const rows = data.values.slice(1);
-
-                allCompanies = rows.map(row => {
-                    const company = {};
-                    headers.forEach((header, index) => {
-                        company[header] = row[index] || '';
-                    });
-                    return company;
-                }).filter(c => c['Company Name']); // Filter out empty rows
-
-                filteredCompanies = [...allCompanies];
+                const companies = CSVParser.parse(csvText);
                 
-                loadingEl.style.display = 'none';
-                updateUI();
-                updateMetrics();
+                // Filter out empty rows
+                return companies.filter(c => c[CONFIG.REQUIRED_FIELD] && c[CONFIG.REQUIRED_FIELD].trim());
+            }
+        }
+
+        /**
+         * ============================================
+         * COMPANY DATA PARSER
+         * ============================================
+         */
+        class CompanyParser {
+            /**
+             * Parse founder string format: "Name (URL), Name (URL)"
+             * @param {string} foundersStr - Founder string
+             * @returns {Array<{name: string, url: string}>} Array of founder objects
+             */
+            static parseFounders(foundersStr) {
+                if (!foundersStr) return [];
                 
-            } catch (error) {
-                console.error('Error:', error);
-                loadingEl.style.display = 'none';
-                errorEl.style.display = 'block';
-                document.getElementById('error-message').textContent = error.message;
-            }
-        }
-
-        // ============================================
-        // UI RENDERING
-        // ============================================
-        function renderCompanies() {
-            const gridContainer = document.getElementById('companies-grid');
-            const tableBody = document.getElementById('table-body');
-            
-            gridContainer.innerHTML = '';
-            tableBody.innerHTML = '';
-
-            if (filteredCompanies.length === 0) {
-                gridContainer.innerHTML = '<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #999;">No companies found matching your search.</div>';
-                return;
-            }
-
-            if (currentView === 'grid') {
-                filteredCompanies.forEach((company, index) => {
-                    const card = createCompanyCard(company, index);
-                    gridContainer.appendChild(card);
+                const founders = [];
+                const parts = foundersStr.split(',');
+                
+                parts.forEach(part => {
+                    const match = part.trim().match(/^(.+?)\s*\((.+?)\)$/);
+                    if (match) {
+                        founders.push({
+                            name: match[1].trim(),
+                            url: match[2].trim()
+                        });
+                    } else {
+                        founders.push({
+                            name: part.trim(),
+                            url: '#'
+                        });
+                    }
                 });
-            } else {
-                filteredCompanies.forEach(company => {
-                    const row = createTableRow(company);
-                    tableBody.appendChild(row);
-                });
+                
+                return founders;
+            }
+
+            /**
+             * Extract funding amount from text
+             * @param {string} text - Text containing funding information
+             * @returns {number} Funding amount in millions
+             */
+            static extractFundingAmount(text) {
+                const match = text.match(/\$(\d+(?:\.\d+)?)\s*(?:million|M)/i);
+                return match ? parseFloat(match[1]) : 0;
             }
         }
 
-        function createCompanyCard(company, index) {
-            const card = document.createElement('div');
-            card.className = 'company-card';
-            card.innerHTML = `
-                <div class="company-header">
-                    <div class="company-name">${escapeHtml(company['Company Name'] || '')}</div>
-                    <a href="${company['Company LinkedIn'] || '#'}" target="_blank" class="company-link">
-                        ${company['Company LinkedIn'] ? 'View on LinkedIn' : 'No LinkedIn'}
-                    </a>
-                </div>
+        /**
+         * ============================================
+         * UI UTILITIES
+         * ============================================
+         */
+        class UIUtils {
+            /**
+             * Escape HTML to prevent XSS
+             * @param {string} text - Text to escape
+             * @returns {string} Escaped HTML
+             */
+            static escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
 
-                <div class="company-section">
-                    <div class="section-title">Founders</div>
-                    <div class="founder-list">
-                        ${parseFounders(company['Founders'] || '').map(founder => 
-                            `<div class="founder-tag">
-                                ${founder.url && founder.url !== '#' ? 
-                                    `<a href="${founder.url}" target="_blank">${escapeHtml(founder.name)}</a>` : 
-                                    escapeHtml(founder.name)
-                                }
-                            </div>`
-                        ).join('')}
-                    </div>
-                </div>
-
-                <div class="company-section">
-                    <div class="section-title">Investors</div>
-                    <div class="investor-list">
-                        ${(company['Investors'] || '').split(';').filter(i => i.trim()).map(investor => 
-                            `<div class="investor-tag">${escapeHtml(investor.trim())}</div>`
-                        ).join('')}
-                    </div>
-                </div>
-
-                <div class="company-section">
-                    <div class="section-title">Description</div>
-                    <div class="section-content">${escapeHtml(company['Description'] || '')}</div>
-                </div>
-
-                <div class="expand-toggle" onclick="toggleCardExpand(this)">
-                    <span class="toggle-text">Show more details</span>
-                </div>
-
-                <div class="company-section" style="display: none;">
-                    <div class="section-title">China Background</div>
-                    <div class="section-content">${escapeHtml(company['China Background'] || '').replace(/\n/g, '<br>')}</div>
-                </div>
-
-                <div class="company-section" style="display: none;">
-                    <div class="section-title">Current Achievements</div>
-                    <div class="section-content">${escapeHtml(company['Current Achievements'] || '').replace(/\n/g, '<br>')}</div>
-                </div>
-            `;
-            return card;
+            /**
+             * Format text with line breaks
+             * @param {string} text - Text to format
+             * @returns {string} Formatted text with <br> tags
+             */
+            static formatMultiline(text) {
+                return this.escapeHtml(text || '').replace(/\n/g, '<br>');
+            }
         }
 
-        function createTableRow(company) {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>
-                    <strong>${escapeHtml(company['Company Name'] || '')}</strong><br>
-                    <a href="${company['Company LinkedIn'] || '#'}" target="_blank" style="font-size: 12px;">
-                        ${company['Company LinkedIn'] ? 'LinkedIn' : '—'}
-                    </a>
-                </td>
-                <td>${parseFounders(company['Founders'] || '').map(f => escapeHtml(f.name)).join(', ')}</td>
-                <td>${(company['Investors'] || '').split(';').slice(0, 2).join('; ')}</td>
-                <td>${escapeHtml((company['Description'] || '').substring(0, 100))}</td>
-            `;
-            return row;
-        }
+        /**
+         * ============================================
+         * APPLICATION STATE
+         * ============================================
+         */
+        class AppState {
+            constructor() {
+                this.allCompanies = [];
+                this.filteredCompanies = [];
+                this.currentSort = 'name';
+                this.currentView = 'grid';
+            }
 
-        function parseFounders(foundersStr) {
-            // Parse founder string format: "Name (URL), Name (URL)"
-            if (!foundersStr) return [];
-            
-            const founders = [];
-            const parts = foundersStr.split(',');
-            
-            parts.forEach(part => {
-                const match = part.trim().match(/^(.+?)\s*\((.+?)\)$/);
-                if (match) {
-                    founders.push({
-                        name: match[1].trim(),
-                        url: match[2].trim()
-                    });
-                } else {
-                    founders.push({
-                        name: part.trim(),
-                        url: '#'
+            setCompanies(companies) {
+                this.allCompanies = companies;
+                this.filteredCompanies = [...companies];
+            }
+
+            filter(searchTerm) {
+                const term = searchTerm.toLowerCase();
+                
+                this.filteredCompanies = this.allCompanies.filter(company => {
+                    const searchFields = [
+                        company['Company Name'] || '',
+                        company['Founders'] || '',
+                        company['Investors'] || '',
+                        company['Description'] || '',
+                        company['China Background'] || ''
+                    ].join(' ').toLowerCase();
+                    
+                    return searchFields.includes(term);
+                });
+                
+                this.sort();
+            }
+
+            sort() {
+                if (this.currentSort === 'name') {
+                    this.filteredCompanies.sort((a, b) => 
+                        (a['Company Name'] || '').localeCompare(b['Company Name'] || '')
+                    );
+                } else if (this.currentSort === 'funding') {
+                    this.filteredCompanies.sort((a, b) => {
+                        const aFunding = CompanyParser.extractFundingAmount(a['Current Achievements'] || '');
+                        const bFunding = CompanyParser.extractFundingAmount(b['Current Achievements'] || '');
+                        return bFunding - aFunding;
                     });
                 }
-            });
-            
-            return founders;
-        }
+            }
 
-        function toggleCardExpand(element) {
-            const card = element.closest('.company-card');
-            const hiddenSections = card.querySelectorAll('.company-section[style*="display: none"]');
-            const toggleText = element.querySelector('.toggle-text');
-            
-            hiddenSections.forEach(section => {
-                if (section.style.display === 'none') {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-            
-            const isExpanded = hiddenSections[0].style.display !== 'none';
-            toggleText.textContent = isExpanded ? 'Show less details' : 'Show more details';
-        }
+            setSort(sortType) {
+                this.currentSort = sortType;
+                this.sort();
+            }
 
-        // ============================================
-        // SEARCH & FILTER
-        // ============================================
-        function filterCompanies(searchTerm) {
-            const term = searchTerm.toLowerCase();
-            
-            filteredCompanies = allCompanies.filter(company => {
-                const searchFields = [
-                    company['Company Name'] || '',
-                    company['Founders'] || '',
-                    company['Investors'] || '',
-                    company['Description'] || '',
-                    company['China Background'] || ''
-                ].join(' ').toLowerCase();
-                
-                return searchFields.includes(term);
-            });
-            
-            sortCompanies();
-            renderCompanies();
-        }
-
-        function sortCompanies() {
-            if (currentSort === 'name') {
-                filteredCompanies.sort((a, b) => 
-                    (a['Company Name'] || '').localeCompare(b['Company Name'] || '')
-                );
-            } else if (currentSort === 'funding') {
-                filteredCompanies.sort((a, b) => {
-                    const aFunding = extractFundingAmount(a['Current Achievements'] || '');
-                    const bFunding = extractFundingAmount(b['Current Achievements'] || '');
-                    return bFunding - aFunding;
-                });
+            setView(viewType) {
+                this.currentView = viewType;
             }
         }
 
-        function extractFundingAmount(text) {
-            const match = text.match(/\$(\d+(?:\.\d+)?)\s*(?:million|M)/i);
-            return match ? parseFloat(match[1]) : 0;
-        }
+        /**
+         * ============================================
+         * UI RENDERER
+         * ============================================
+         */
+        class UIRenderer {
+            constructor(state) {
+                this.state = state;
+            }
 
-        // ============================================
-        // METRICS
-        // ============================================
-        function updateMetrics() {
-            document.getElementById('total-companies').textContent = allCompanies.length;
-            
-            let totalFunding = 0;
-            allCompanies.forEach(company => {
-                totalFunding += extractFundingAmount(company['Current Achievements'] || '');
-            });
-            
-            document.getElementById('total-funding').textContent = 
-                totalFunding > 0 ? `$${totalFunding}M+` : 'Not disclosed';
-            
-            const now = new Date();
-            document.getElementById('last-updated').textContent = now.toLocaleDateString();
-            document.getElementById('footer-updated').textContent = now.toLocaleDateString();
-        }
-
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            filterCompanies(e.target.value);
-        });
-
-        document.querySelectorAll('.sort-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                currentSort = e.target.dataset.sort;
-                sortCompanies();
-                renderCompanies();
-            });
-        });
-
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                currentView = e.target.dataset.view;
+            /**
+             * Render companies based on current view
+             */
+            renderCompanies() {
+                const gridContainer = document.getElementById('companies-grid');
+                const tableBody = document.getElementById('table-body');
                 
+                gridContainer.innerHTML = '';
+                tableBody.innerHTML = '';
+
+                if (this.state.filteredCompanies.length === 0) {
+                    gridContainer.innerHTML = '<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #999;">No companies found matching your search.</div>';
+                    return;
+                }
+
+                if (this.state.currentView === 'grid') {
+                    this.renderGridView(gridContainer);
+                } else {
+                    this.renderTableView(tableBody);
+                }
+            }
+
+            /**
+             * Render grid view
+             * @param {HTMLElement} container - Container element
+             */
+            renderGridView(container) {
+                this.state.filteredCompanies.forEach((company) => {
+                    const card = this.createCompanyCard(company);
+                    container.appendChild(card);
+                });
+            }
+
+            /**
+             * Render table view
+             * @param {HTMLElement} tbody - Table body element
+             */
+            renderTableView(tbody) {
+                this.state.filteredCompanies.forEach(company => {
+                    const row = this.createTableRow(company);
+                    tbody.appendChild(row);
+                });
+            }
+
+            /**
+             * Create a company card element
+             * @param {Object} company - Company data object
+             * @returns {HTMLElement} Company card element
+             */
+            createCompanyCard(company) {
+                const card = document.createElement('div');
+                card.className = 'company-card';
+                card.innerHTML = this.getCompanyCardHTML(company);
+                return card;
+            }
+
+            /**
+             * Get HTML for company card
+             * @param {Object} company - Company data object
+             * @returns {string} HTML string
+             */
+            getCompanyCardHTML(company) {
+                const founders = CompanyParser.parseFounders(company['Founders'] || '');
+                const investors = (company['Investors'] || '').split(';').filter(i => i.trim());
+                
+                return `
+                    <div class="company-header">
+                        <div class="company-name">${UIUtils.escapeHtml(company['Company Name'] || '')}</div>
+                        <a href="${company['Company LinkedIn'] || '#'}" target="_blank" class="company-link">
+                            ${company['Company LinkedIn'] ? 'View on LinkedIn' : 'No LinkedIn'}
+                        </a>
+                    </div>
+
+                    <div class="company-section">
+                        <div class="section-title">Founders</div>
+                        <div class="founder-list">
+                            ${founders.map(founder => 
+                                `<div class="founder-tag">
+                                    ${founder.url && founder.url !== '#' ? 
+                                        `<a href="${founder.url}" target="_blank">${UIUtils.escapeHtml(founder.name)}</a>` : 
+                                        UIUtils.escapeHtml(founder.name)
+                                    }
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="company-section">
+                        <div class="section-title">Investors</div>
+                        <div class="investor-list">
+                            ${investors.map(investor => 
+                                `<div class="investor-tag">${UIUtils.escapeHtml(investor.trim())}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="company-section">
+                        <div class="section-title">Description</div>
+                        <div class="section-content">${UIUtils.escapeHtml(company['Description'] || '')}</div>
+                    </div>
+
+                    <div class="expand-toggle" onclick="app.toggleCardExpand(this)">
+                        <span class="toggle-text">Show more details</span>
+                    </div>
+
+                    <div class="company-section" style="display: none;">
+                        <div class="section-title">China Background</div>
+                        <div class="section-content">${UIUtils.formatMultiline(company['China Background'] || '')}</div>
+                    </div>
+
+                    <div class="company-section" style="display: none;">
+                        <div class="section-title">Current Achievements</div>
+                        <div class="section-content">${UIUtils.formatMultiline(company['Current Achievements'] || '')}</div>
+                    </div>
+                `;
+            }
+
+            /**
+             * Create a table row element
+             * @param {Object} company - Company data object
+             * @returns {HTMLElement} Table row element
+             */
+            createTableRow(company) {
+                const row = document.createElement('tr');
+                const founders = CompanyParser.parseFounders(company['Founders'] || '');
+                const investors = (company['Investors'] || '').split(';').slice(0, 2).join('; ');
+                
+                row.innerHTML = `
+                    <td>
+                        <strong>${UIUtils.escapeHtml(company['Company Name'] || '')}</strong><br>
+                        <a href="${company['Company LinkedIn'] || '#'}" target="_blank" style="font-size: 12px;">
+                            ${company['Company LinkedIn'] ? 'LinkedIn' : '—'}
+                        </a>
+                    </td>
+                    <td>${founders.map(f => UIUtils.escapeHtml(f.name)).join(', ')}</td>
+                    <td>${UIUtils.escapeHtml(investors)}</td>
+                    <td>${UIUtils.escapeHtml((company['Description'] || '').substring(0, 100))}</td>
+                `;
+                return row;
+            }
+
+            /**
+             * Update metrics display
+             */
+            updateMetrics() {
+                document.getElementById('total-companies').textContent = this.state.allCompanies.length;
+                
+                let totalFunding = 0;
+                this.state.allCompanies.forEach(company => {
+                    totalFunding += CompanyParser.extractFundingAmount(company['Current Achievements'] || '');
+                });
+                
+                document.getElementById('total-funding').textContent = 
+                    totalFunding > 0 ? `$${totalFunding}M+` : 'Not disclosed';
+                
+                const now = new Date();
+                const dateStr = now.toLocaleDateString();
+                document.getElementById('last-updated').textContent = dateStr;
+                document.getElementById('footer-updated').textContent = dateStr;
+            }
+
+            /**
+             * Show loading state
+             */
+            showLoading() {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('error').style.display = 'none';
+            }
+
+            /**
+             * Hide loading state
+             */
+            hideLoading() {
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            /**
+             * Show error message
+             * @param {string} message - Error message
+             */
+            showError(message) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error-message').textContent = message;
+            }
+
+            /**
+             * Update view display
+             */
+            updateView() {
                 const gridView = document.getElementById('companies-grid');
                 const tableView = document.getElementById('companies-table');
                 
-                if (currentView === 'grid') {
+                if (this.state.currentView === 'grid') {
                     gridView.style.display = 'grid';
                     tableView.classList.remove('active');
                 } else {
                     gridView.style.display = 'none';
                     tableView.classList.add('active');
                 }
+            }
+
+            /**
+             * Toggle card expand/collapse
+             * @param {HTMLElement} element - Toggle element
+             */
+            toggleCardExpand(element) {
+                const card = element.closest('.company-card');
+                const hiddenSections = card.querySelectorAll('.company-section[style*="display: none"]');
+                const toggleText = element.querySelector('.toggle-text');
                 
-                renderCompanies();
-            });
-        });
-
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+                hiddenSections.forEach(section => {
+                    section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                });
+                
+                const isExpanded = hiddenSections[0] && hiddenSections[0].style.display !== 'none';
+                toggleText.textContent = isExpanded ? 'Show less details' : 'Show more details';
+            }
         }
 
-        function updateUI() {
-            renderCompanies();
+        /**
+         * ============================================
+         * MAIN APPLICATION
+         * ============================================
+         */
+        class App {
+            constructor() {
+                this.state = new AppState();
+                this.renderer = new UIRenderer(this.state);
+                this.refreshInterval = null;
+            }
+
+            /**
+             * Initialize the application
+             */
+            async init() {
+                this.setupEventListeners();
+                await this.loadData();
+                this.startAutoRefresh();
+            }
+
+            /**
+             * Load data from Google Sheets
+             */
+            async loadData() {
+                try {
+                    this.renderer.showLoading();
+                    const companies = await DataService.fetchFromGoogleSheets();
+                    this.state.setCompanies(companies);
+                    this.state.sort();
+                    this.renderer.hideLoading();
+                    this.renderer.renderCompanies();
+                    this.renderer.updateMetrics();
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    this.renderer.showError(error.message);
+                }
+            }
+
+            /**
+             * Setup event listeners
+             */
+            setupEventListeners() {
+                // Search input
+                document.getElementById('search-input').addEventListener('input', (e) => {
+                    this.state.filter(e.target.value);
+                    this.renderer.renderCompanies();
+                });
+
+                // Sort buttons
+                document.querySelectorAll('.sort-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.state.setSort(e.target.dataset.sort);
+                        this.renderer.renderCompanies();
+                    });
+                });
+
+                // View toggle buttons
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.state.setView(e.target.dataset.view);
+                        this.renderer.updateView();
+                        this.renderer.renderCompanies();
+                    });
+                });
+            }
+
+            /**
+             * Start auto-refresh interval
+             */
+            startAutoRefresh() {
+                this.refreshInterval = setInterval(() => {
+                    this.loadData();
+                }, CONFIG.AUTO_REFRESH_INTERVAL);
+            }
+
+            /**
+             * Toggle card expand (exposed for onclick handlers)
+             * @param {HTMLElement} element - Toggle element
+             */
+            toggleCardExpand(element) {
+                this.renderer.toggleCardExpand(element);
+            }
         }
 
-        // ============================================
-        // INITIALIZATION
-        // ============================================
+        /**
+         * ============================================
+         * INITIALIZATION
+         * ============================================
+         */
+        const app = new App();
         document.addEventListener('DOMContentLoaded', () => {
-            fetchDataFromGoogleSheets();
-            
-            // Auto-refresh every 5 minutes (300000 ms)
-            setInterval(fetchDataFromGoogleSheets, 300000);
+            app.init();
         });
     </script>
 </body>

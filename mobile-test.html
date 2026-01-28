@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile Test - AI Companies Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .test-header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .test-header h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .device-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .device-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .device-btn:hover {
+            border-color: #000;
+            background: #f5f5f5;
+        }
+
+        .device-btn.active {
+            background: #000;
+            color: white;
+            border-color: #000;
+        }
+
+        .mobile-container {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mobile-frame {
+            width: 375px;
+            height: 812px;
+            border: 8px solid #1a1a1a;
+            border-radius: 25px;
+            overflow: hidden;
+            position: relative;
+            background: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 25px;
+            background: #1a1a1a;
+            border-radius: 0 0 15px 15px;
+            z-index: 10;
+        }
+
+        .mobile-frame.iphone-se {
+            width: 375px;
+            height: 667px;
+        }
+
+        .mobile-frame.iphone-12-pro {
+            width: 390px;
+            height: 844px;
+        }
+
+        .mobile-frame.iphone-14-pro-max {
+            width: 430px;
+            height: 932px;
+        }
+
+        .mobile-frame.android {
+            width: 360px;
+            height: 640px;
+        }
+
+        .mobile-frame.tablet {
+            width: 768px;
+            height: 1024px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .info {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .mobile-frame {
+                width: 100%;
+                max-width: 375px;
+                height: 667px;
+            }
+
+            .device-selector {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>📱 Mobile Viewport Test</h1>
+        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
+            Select a device to test the dashboard's mobile responsiveness
+        </p>
+        <div class="device-selector">
+            <button class="device-btn active" data-device="iphone-se" data-width="375" data-height="667">
+                iPhone SE
+            </button>
+            <button class="device-btn" data-device="iphone-12-pro" data-width="390" data-height="844">
+                iPhone 12 Pro
+            </button>
+            <button class="device-btn" data-device="iphone-14-pro-max" data-width="430" data-height="932">
+                iPhone 14 Pro Max
+            </button>
+            <button class="device-btn" data-device="android" data-width="360" data-height="640">
+                Android (360px)
+            </button>
+            <button class="device-btn" data-device="tablet" data-width="768" data-height="1024">
+                iPad (768px)
+            </button>
+        </div>
+    </div>
+
+    <div class="mobile-container">
+        <div class="mobile-frame iphone-se" id="mobile-frame">
+            <iframe 
+                src="http://localhost:8000" 
+                title="AI Companies Dashboard Mobile View"
+                id="dashboard-frame"
+            ></iframe>
+        </div>
+    </div>
+
+    <div class="info">
+        <p>Viewport: <span id="viewport-info">375 × 667</span> | 
+        Refresh: <a href="#" onclick="document.getElementById('dashboard-frame').src = document.getElementById('dashboard-frame').src; return false;" style="color: #0066cc;">Click here</a></p>
+    </div>
+
+    <script>
+        const deviceButtons = document.querySelectorAll('.device-btn');
+        const mobileFrame = document.getElementById('mobile-frame');
+        const viewportInfo = document.getElementById('viewport-info');
+        const dashboardFrame = document.getElementById('dashboard-frame');
+
+        deviceButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                deviceButtons.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                // Get device dimensions
+                const device = btn.dataset.device;
+                const width = btn.dataset.width;
+                const height = btn.dataset.height;
+
+                // Update frame class
+                mobileFrame.className = `mobile-frame ${device}`;
+                
+                // Update frame dimensions
+                mobileFrame.style.width = width + 'px';
+                mobileFrame.style.height = height + 'px';
+
+                // Update viewport info
+                viewportInfo.textContent = `${width} × ${height}`;
+
+                // Reload iframe to apply new viewport
+                const currentSrc = dashboardFrame.src;
+                dashboardFrame.src = '';
+                setTimeout(() => {
+                    dashboardFrame.src = currentSrc;
+                }, 100);
+            });
+        });
+
+        // Auto-refresh iframe every 30 seconds to catch Google Sheets updates
+        setInterval(() => {
+            const currentSrc = dashboardFrame.src;
+            dashboardFrame.src = '';
+            setTimeout(() => {
+                dashboardFrame.src = currentSrc;
+            }, 100);
+        }, 30000);
+    </script>
+</body>
+</html>
