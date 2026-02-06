@@ -1,56 +1,53 @@
 # AI Companies Dashboard
 
-Interactive dashboard showcasing AI companies founded by Chinese entrepreneurs in Singapore. Features real-time data sync with Google Sheets, responsive design, minimalist styling, and a powerful data editor.
+Interactive dashboard showcasing AI companies founded by Chinese entrepreneurs in Singapore. Features company logos, founder profile images, responsive design, and comprehensive company information.
 
 🔗 **[View Live Dashboard](https://ductran2918.github.io/ai-companies-dashboard/)**
 
 ## Features
 
-### Dashboard
-- ✅ Real-time Google Sheets integration (auto-refreshes every 5 minutes)
-- ✅ Fully responsive design (mobile, tablet, desktop) with mobile-optimized UI
-- ✅ Search and filter functionality
-- ✅ Sort by name or funding amount
-- ✅ Grid and table view options
-- ✅ Minimalist black & white design
-- ✅ Fully customizable fonts and styling via CSS variables
-- ✅ Mobile test page for responsive design testing
-- ✅ Modern, refactored codebase with modular architecture
-- ✅ Industry, funding stage, and year badges for quick insights
+### NEW Dashboard (v3.0 - Simplified Static Version)
+- 🏢 **Company logos** displayed prominently
+- 👤 **Founder profile images** with LinkedIn URL matching
+- 💰 **Funding information** with badges (amount, stage, year)
+- 📊 **Clean card layout** with organized sections
+- 📱 **Fully responsive** design (mobile, tablet, desktop)
+- ⚡ **Zero dependencies** - Pure HTML/CSS/JavaScript
+- 🚀 **Static hosting ready** - No backend required
+- 🎨 **Modern, minimalist** black & white design
 
-### Data Editor (NEW in v2.2)
-- ✏️ Web-based form editor for adding/editing companies
-- 🔒 Input validation and security (XSS prevention, CSV injection protection)
-- 📤 Import/Export CSV functionality
-- 🔄 Automatic backups before every change
-- 🎯 No manual CSV editing required!
+### Data Features
+- Company logos from high-quality sources
+- 12 founder profile images matched via LinkedIn URLs
+- 7 companies with complete information
+- Funding details (amount, stage, founding year)
+- Investor information
+- Founder backgrounds
 
 ## Quick Start
 
-### Option 1: Use the Data Editor (Easiest)
+### Simplified Dashboard (Recommended)
 
-1. **Start Backend Server:**
+1. **Start Local Server:**
    ```bash
-   cd backend
-   pip install -r requirements.txt
-   python app.py
-   ```
-   Backend runs at http://localhost:5000
-
-2. **Start Frontend:**
-   ```bash
-   # From project root
    python3 -m http.server 8000
    ```
-   - Dashboard: http://localhost:8000/index.html
-   - Editor: http://localhost:8000/editor.html
 
-3. **Edit Data:**
-   - Open the editor at http://localhost:8000/editor.html
-   - Add, edit, or delete companies using the form interface
-   - Changes save automatically to `sample-data.csv`
+2. **Open Dashboard:**
+   - Navigate to: http://localhost:8000/dashboard.html
+   - Data loads automatically from CSV files
 
-### Option 2: Google Sheets Integration
+3. **View Company Information:**
+   - Company logos displayed at top of each card
+   - Founder avatars shown with names and LinkedIn links
+   - Funding badges show amount, stage, and year
+   - Full descriptions and investor lists
+
+### Legacy Dashboard (Google Sheets Integration)
+
+For the older version with Google Sheets integration:
+- Dashboard: http://localhost:8000/index.html
+- Editor: http://localhost:8000/editor.html
 
 1. **Create Google Sheet:**
    - Go to [Google Sheets](https://sheets.google.com)
@@ -122,95 +119,87 @@ const CONFIG = {
 };
 ```
 
-## Data Format (11-Column Structure)
+## Data Format
 
-**NEW in v2.2:** Data structure upgraded from 7 columns to 11 columns for better organization.
+### Company Data (`final_dataset/final_dataset_corrected.csv`)
 
-| Column | Required | Description | Example |
-|--------|----------|-------------|---------|
-| Company Name | ✅ | Company name | ChemLex |
-| Company LinkedIn | | LinkedIn URL | https://sg.linkedin.com/company/chemlex |
-| Founders | | Names with URLs | Felix Tao (https://...), Kisson Lin (https://...) |
-| China Background | | Chinese heritage/experience | Worked at Alibaba... |
-| **Total Funding (USD M)** | | **Funding in millions** | **71** |
-| **Funding Stage** | | **Latest funding round** | **Series A+** |
-| **Founded Year** | | **Year founded** | **2020** |
-| **Industry** | | **Industry category** | **Biotech** |
-| Current Achievements | | Recent milestones | Launched global HQ in Singapore... |
-| Investors | | Semicolon separated | Qiming; Sequoia; Ant Group |
-| Description | ✅ | What company does | ChemLex is an AI-for-science company... |
+The dashboard loads data from a CSV file with the following columns:
 
-**Format Notes:**
-- Founders: `Name (URL), Name (URL)` or just `Name, Name`
-- Investors: Separate multiple investors with semicolons `;`
-- Funding stages: Pre-seed, Seed, Angel, Series A, Series A+, Series B, Series C+, Growth, IPO, Acquired
-- Industries: AI/ML, Biotech, Creative AI, Data Infrastructure, DevTools, Enterprise AI, Fintech, Healthcare, Media/Creative, Productivity, Security, Other
+| Column | Description | Example |
+|--------|-------------|---------|
+| Name | Company name | ChemLex |
+| Company linkedIn | LinkedIn company URL | https://linkedin.com/company/chemlex |
+| Company logo | Image URL for company logo | https://cdn.techinasia.com/data/images/... |
+| Founders | Names with LinkedIn URLs | Sean Lin (https://sg.linkedin.com/in/linsen986), Peng Wang (...) |
+| Founders background | Founder experience text | Sean Lin was the youngest global project manager... |
+| Total funding (in US$ million) | Funding amount | 71 |
+| Funding stage | Latest funding round | Series B |
+| Year founded | Year company started | 2022 |
+| Investors | Investor list | Granite Asia (Singapore), Qiming Venture Partners... |
+| Description | What company does | Founded in 2022 in Shanghai, ChemLex uses AI... |
 
-**Migration Note:**
-Old 7-column CSVs are automatically backed up to `sample-data-backup-7col-*.csv`. Run `python3 migrate_data.py` to convert legacy data.
+### Founder Images (`final_dataset/profile_images.csv`)
+
+Profile images are matched via LinkedIn URLs:
+
+| Column | Description | Example |
+|--------|-------------|---------|
+| Person Name | Founder name | Sean Lin |
+| LinkedIn Profile URL | LinkedIn profile URL | https://sg.linkedin.com/in/linsen986 |
+| Image URL | Profile image URL | https://cdn.techinasia.com/wp-content/uploads/... |
+
+**Matching Logic:**
+- Founders field is parsed to extract LinkedIn URLs
+- URLs are matched against profile_images.csv
+- Matching founders get their profile image displayed
 
 ## Files
 
-### Frontend
-- `index.html` - Main dashboard file (refactored with modular architecture)
-- `editor.html` - Data editor interface (NEW in v2.2)
+### Main Dashboard (NEW v3.0)
+- `dashboard.html` - **Simplified static dashboard** with logos and images (~400 lines)
+  - Zero dependencies
+  - Loads data directly from CSV files
+  - Company logos and founder avatars
+  - No backend required
+
+### Data Files
+- `final_dataset/final_dataset_corrected.csv` - Company data (7 companies)
+- `final_dataset/profile_images.csv` - Founder profile images (12 images)
+
+### Legacy Files (Old Versions)
+- `index.html` - Legacy dashboard with Google Sheets integration
+- `editor.html` - Data editor interface
 - `mobile-test.html` - Mobile viewport testing page
-- `js/api-client.js` - API client for backend communication (NEW)
-- `js/editor.js` - Editor application logic (NEW)
-
-### Backend (NEW in v2.2)
-- `backend/app.py` - Flask REST API server
-- `backend/models.py` - CSV data operations (CRUD)
-- `backend/validators.py` - Input validation & security
-- `backend/config.py` - Configuration settings
-- `backend/requirements.txt` - Python dependencies
-- `backend/backups/` - Automatic CSV backups
-
-### Data
-- `sample-data.csv` - Main data file (11-column format)
-- `sample-data-backup-7col-*.csv` - Legacy 7-column backups
-- `migrate_data.py` - Migration script (7-col → 11-col)
-- `current_data.csv` - Test data file
-- `optimized_data.csv` - Optimized structure reference
+- `js/api-client.js` - API client for backend communication
+- `js/editor.js` - Editor application logic
+- `backend/` - Flask backend for data editor
+- `sample-data.csv` - Old data format
 
 ### Configuration
 - `.gitignore` - Git ignore rules for temporary and sensitive files
 
 ## Updating Content
 
-### Option 1: Use the Data Editor (Recommended)
+### Simplified Dashboard (v3.0)
 
-1. **Start the backend server:**
-   ```bash
-   cd backend
-   python app.py
-   ```
+**Edit CSV files directly:**
 
-2. **Open the editor:** http://localhost:8000/editor.html
+1. **Update company data:**
+   - Edit `final_dataset/final_dataset_corrected.csv`
+   - Add/remove companies or update information
+   - Keep CSV format intact (headers on first row)
 
-3. **Make changes:**
-   - Click "Add Company" to create new entries
-   - Click "Edit" to modify existing companies
-   - Click "Delete" to remove companies
-   - Use "Import CSV" to bulk upload data
-   - Use "Export CSV" to download current data
+2. **Add founder images:**
+   - Add rows to `final_dataset/profile_images.csv`
+   - Format: `Person Name,LinkedIn Profile URL,Image URL`
+   - LinkedIn URL must match exactly with Founders field
 
-4. **Changes are immediate:**
-   - Automatic backup created before every change
-   - Data saved to `sample-data.csv`
-   - Refresh dashboard to see updates
+3. **Refresh dashboard:**
+   - Save CSV files
+   - Reload http://localhost:8000/dashboard.html
+   - Changes appear immediately
 
-### Option 2: Edit Google Sheet Directly
-
-1. Edit your Google Sheet directly
-2. Changes appear automatically:
-   - Auto-refresh: Every 5 minutes (only when tab is visible)
-   - Manual refresh: Press F5 or Cmd+R
-
-No code changes needed! Just edit the Google Sheet and refresh the page.
-
-**Fallback Mode:**
-If Google Sheets is unavailable, the dashboard automatically falls back to loading `sample-data.csv`. This ensures the dashboard always works, even offline.
+**Note:** The dashboard loads data directly from CSV files on each page load. No database or backend required.
 
 ## Troubleshooting
 
@@ -234,29 +223,29 @@ If Google Sheets is unavailable, the dashboard automatically falls back to loadi
 
 ## Technical Details
 
-### Frontend
-- **Framework:** Vanilla JavaScript (zero dependencies)
+### Simplified Dashboard (v3.0)
+- **Framework:** Pure HTML/CSS/JavaScript (zero dependencies)
 - **Architecture:** Modular class-based design
-- **Data Source:** Google Sheets CSV export (no API key required) with local CSV fallback
+- **Data Source:** CSV files loaded via fetch API
+- **Image Matching:** LinkedIn URL-based founder image matching
 - **Styling:** Pure CSS with CSS variables (design tokens)
-- **Responsive:** Mobile-first design with safe-area support
-- **Auto-refresh:** Configurable interval (default: 5 minutes), only when tab is visible
-- **Performance:** Search debouncing (150ms) to reduce re-renders
-- **Error Recovery:** Automatic fallback to local CSV if Google Sheets fails
+- **Responsive:** Mobile-first design with flexible grid
+- **Performance:** Loads all data on page load (7 companies, 12 images)
+- **Error Handling:** Graceful fallback for missing images
 - **Browser Support:** Modern browsers (Chrome, Firefox, Safari, Edge)
+- **File Size:** ~400 lines in single HTML file
 
-### Backend (NEW in v2.2)
-- **Framework:** Flask (Python 3.7+)
-- **API:** RESTful endpoints (CRUD operations)
-- **Storage:** CSV file with automatic backups
-- **Security:**
-  - Input validation (required fields, data types, length limits)
-  - XSS prevention (HTML sanitization, script tag removal)
-  - CSV injection prevention (formula character escaping)
-  - File upload security (size limits, extension validation)
-  - CORS configuration (restricted origins)
-- **Backup Strategy:** Automatic backup before every write, keeps last 10 backups
-- **Dependencies:** Flask, Flask-CORS, python-dotenv
+### Data Loading Process
+1. Parse both CSV files (companies + profile images)
+2. Build founder image lookup map (LinkedIn URL → Image URL)
+3. Parse Founders field to extract names and URLs
+4. Match founders to images via LinkedIn URL
+5. Render company cards with logos and avatars
+
+### Security
+- **XSS Prevention:** HTML escaping via textContent
+- **No External Dependencies:** All code in single HTML file
+- **Static Assets:** Images loaded from trusted CDN sources
 
 ## Deployment
 
@@ -300,33 +289,29 @@ const API_BASE_URL = 'https://yourusername.pythonanywhere.com/api';
 
 ## Recent Updates
 
-**v2.2 (January 2026) - Data Editor Release**
-- ✏️ **NEW: Web-based data editor** - Add/edit/delete companies via form interface
-- 🔒 **Security:** Input validation, XSS prevention, CSV injection protection
-- 📤 **Import/Export:** Bulk CSV operations with validation
-- 🔄 **Auto-backup:** Automatic backups before every change
-- 📊 **Enhanced data structure:** Upgraded from 7 to 11 columns
-  - New fields: Total Funding (USD M), Funding Stage, Founded Year, Industry
-  - Structured data for better filtering and visualization
-- 🎨 **Dashboard badges:** Industry, funding stage, funding amount, founding year
-- 🔧 **Backend API:** Flask REST API for data operations
-- 📝 **Migration script:** Automated 7-column to 11-column conversion
+**v3.0 (January 2026) - Simplified Static Dashboard**
+- 🎯 **Major Simplification:** Removed backend complexity, pure static HTML
+- 🏢 **Company Logos:** Display company logos from image URLs
+- 👤 **Founder Avatars:** Show founder profile images matched via LinkedIn URLs
+- 💰 **Funding Badges:** Display funding amount, stage, and founding year
+- 📊 **Card Layout:** Clean, organized sections for each company
+- ⚡ **Zero Dependencies:** Single HTML file, no build process
+- 🚀 **Static Hosting:** Deploy anywhere (GitHub Pages, Netlify, S3, etc.)
+- 📁 **CSV Data Source:** Load directly from `final_dataset/` folder
+- 🔗 **LinkedIn Integration:** Clickable founder names link to profiles
 
-**v2.1 (January 2026)**
-- ✅ Added .gitignore for better version control
-- ⚡ Performance: Added search debouncing (150ms) to reduce re-renders
-- 🔄 Smart auto-refresh: Only refreshes when tab is visible (saves API calls)
-- 🛡️ Error recovery: Automatic fallback to local CSV if Google Sheets fails
-- 📝 Better code documentation with inline comments for magic numbers
-- 🔧 Fixed mobile-test.html to use relative path (works in production)
+**Key Benefits of v3.0:**
+- No backend server required
+- No database setup needed
+- Just edit CSV files and refresh
+- Faster page loads
+- Easier maintenance
+- Simpler deployment
 
-**v2.0 (January 2026)**
-- ✨ Complete codebase refactoring with modular architecture
-- 🎨 Improved mobile UI with proper alignment and tag wrapping
-- 📱 Added mobile test page for responsive design testing
-- 🔧 Enhanced CSS organization with design tokens
-- 📱 Safe-area support for modern mobile devices
-- 🎯 Better responsive breakpoints and mobile optimization
+**Previous Versions:**
+- v2.2: Data editor with Flask backend (legacy)
+- v2.1: Google Sheets integration with fallback
+- v2.0: Refactored modular architecture
 
 ## License
 

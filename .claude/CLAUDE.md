@@ -2,74 +2,80 @@
 
 ## Project: AI Companies Dashboard
 
-### Last Updated: 2026-01-28
+### Last Updated: 2026-01-29
 
 ## Overview
-Interactive web dashboard for displaying and filtering AI companies data from Google Sheets. Features automatic data refresh, search functionality, responsive design, and a comprehensive data editor with form-based CRUD operations.
+**NEW in v3.0:** Simplified static dashboard displaying AI companies with company logos and founder profile images. Zero backend required - loads data directly from CSV files.
 
-**NEW in v2.2:** Added web-based data editor with Flask backend API, enabling form-based company management without manual CSV editing.
+Interactive web dashboard showcasing AI companies founded by Chinese entrepreneurs in Singapore. Features company logos, founder avatars matched via LinkedIn URLs, funding badges, and comprehensive company information in a clean card layout.
 
-## Project Architecture
+**Architecture:** Single HTML file (~400 lines) with pure JavaScript, CSS, and CSV data sources. No dependencies, no build process, no backend server needed.
+
+## Project Architecture (v3.0 - Simplified)
 
 ### Technology Stack
 
-#### Frontend
-- **Framework**: Vanilla JavaScript (zero dependencies)
-- **Architecture Pattern**: Modular class-based design
-- **Data Source**: Google Sheets CSV export with local CSV fallback
+#### Dashboard (dashboard.html)
+- **Framework**: Pure HTML/CSS/JavaScript (zero dependencies)
+- **Architecture**: Modular class-based design (3 classes: CSVParser, FounderParser, DashboardApp)
+- **Data Source**: CSV files loaded via fetch API
+  - `final_dataset/final_dataset_corrected.csv` - Company data (7 companies)
+  - `final_dataset/profile_images.csv` - Founder images (12 profiles)
 - **Styling**: Pure CSS with CSS variables (design tokens)
 - **Browser Support**: Modern browsers (Chrome, Firefox, Safari, Edge)
+- **File Size**: Single HTML file (~400 lines)
 
-#### Backend (NEW in v2.2)
-- **Framework**: Flask (Python 3.7+)
-- **API**: RESTful endpoints for CRUD operations
-- **Storage**: CSV file with automatic backup system
-- **Security**: Input validation, XSS prevention, CSV injection protection
-- **Dependencies**: Flask==3.0.0, Flask-CORS==4.0.0, python-dotenv==1.0.0
+#### Data Matching Logic
+- **LinkedIn URL Matching**: Extracts LinkedIn URLs from Founders field, matches against profile_images.csv
+- **Image Display**: Company logos from Company logo column, founder avatars from matched profile images
+- **Graceful Fallback**: Images that fail to load are hidden automatically
 
-### Core Components
+### Core Components (v3.0)
 
-#### 1. Configuration (CONFIG object)
+#### 1. CSVParser Class
+**Purpose:** Parse CSV files into JavaScript objects
+
+**Methods:**
+- `loadCSV(url)` - Fetch and parse CSV file from URL
+- `parseCSV(csvText)` - Convert CSV text to array of objects
+- `parseCSVLine(line)` - Handle quoted fields and commas
+
+**Key Features:**
+- Handles quoted fields with embedded commas
+- Escapes double quotes correctly
+- Returns array of objects with column names as keys
+
+#### 2. FounderParser Class
+**Purpose:** Extract founder names and LinkedIn URLs from text
+
+**Methods:**
+- `parseFounders(foundersText)` - Parse "Name (URL), Name (URL)" format
+
+**Input Format:** `"Sean Lin (https://sg.linkedin.com/in/linsen986), Peng Wang (https://cn.linkedin.com/in/peng-wang-7a717077)"`
+
+**Output Format:**
 ```javascript
-const CONFIG = {
-    GOOGLE_SHEET_ID: '1m5ghTUb146W0koJ4Hdt8DaugrgVr7NVyrt4cOECVPS0',
-    SHEET_NAME: 'Sheet1',
-    AUTO_REFRESH_INTERVAL: 300000, // 5 minutes in milliseconds
-    REQUIRED_FIELD: 'Company Name',
-    SEARCH_DEBOUNCE_MS: 150, // Debounce delay for search input
-    FALLBACK_CSV: 'sample-data.csv' // Fallback CSV if Google Sheets fails
-};
+[
+  { name: "Sean Lin", linkedinUrl: "https://sg.linkedin.com/in/linsen986" },
+  { name: "Peng Wang", linkedinUrl: "https://cn.linkedin.com/in/peng-wang-7a717077" }
+]
 ```
 
-#### 2. CSVParser
-- Parses CSV text into JavaScript objects
-- Handles quoted fields and escaped quotes
-- Returns array of company objects with field names as keys
+#### 3. DashboardApp Class
+**Purpose:** Main application orchestrator
 
-#### 3. DataService
-- **fetchFromGoogleSheets()**: Primary data fetching from Google Sheets
-- **fetchFromLocalCSV()**: Fallback data fetching from local CSV file
-- Error recovery: Automatically falls back to local CSV if Google Sheets fails
+**Properties:**
+- `companies` - Array of company data
+- `founderImages` - Map of LinkedIn URL → Image URL
 
-#### 4. AppState
-- Manages application state (companies data, filters, sort order)
-- Methods:
-  - `setCompanies()`: Store raw company data
-  - `filter(query)`: Filter companies by search query
-  - `sort(field)`: Sort companies by specified field
-
-#### 5. UIRenderer
-- Renders UI components based on application state
-- Methods:
-  - `renderCompanies()`: Render company cards grid
-  - `renderStats()`: Update statistics display
-  - `renderLoading()`: Show loading state
-  - `renderError()`: Display error messages
-
-#### 6. DashboardApp (Main Application)
-- Orchestrates all components
-- Manages application lifecycle
-- Handles event listeners and auto-refresh
+**Methods:**
+- `init()` - Load data and render dashboard
+- `loadCompanies()` - Load company CSV
+- `loadFounderImages()` - Load profile images CSV
+- `matchFoundersToImages(founders)` - Match founders to profile pictures
+- `renderCompanies()` - Render all company cards
+- `createCompanyCard(company)` - Build single company card HTML
+- `escape(text)` - XSS prevention via HTML escaping
 
 ## Key Features
 
@@ -267,36 +273,38 @@ All backend functionality tested and verified:
 - 🔄 Added auto-refresh functionality (5-minute intervals)
 - 📊 Enhanced statistics display with proper formatting
 
-## File Structure
+## File Structure (v3.0)
 
 ```
 ai-companies-dashboard/
-├── index.html                      # Main dashboard application
-├── editor.html                     # NEW: Data editor interface
-├── mobile-test.html               # Mobile viewport testing page
-├── js/                            # NEW: JavaScript modules
-│   ├── api-client.js              # API client for backend
-│   └── editor.js                  # Editor application logic
-├── backend/                       # NEW: Flask API backend
-│   ├── app.py                     # Main Flask application
-│   ├── models.py                  # CSV CRUD operations
-│   ├── validators.py              # Input validation & security
-│   ├── config.py                  # Configuration settings
-│   ├── requirements.txt           # Python dependencies
-│   └── backups/                   # Automatic CSV backups
-├── sample-data.csv                # Main data file (11-column format)
-├── sample-data-backup-7col-*.csv  # Legacy 7-column backups
-├── migrate_data.py                # Migration script (7-col → 11-col)
-├── test_backend.py                # Backend functionality tests
-├── current_data.csv               # Test data file
-├── optimized_data.csv             # Optimized structure reference
-├── .gitignore                     # Git ignore rules
-├── README.md                      # User-facing documentation
-├── CSV_STRUCTURE_COMPARISON.md    # Data structure comparison
-├── DATA_STRUCTURE_ANALYSIS.md     # Detailed data analysis
+├── dashboard.html                 # NEW v3.0: Simplified static dashboard (~400 lines)
+│                                  # - Company logos and founder avatars
+│                                  # - Zero dependencies, single HTML file
+│                                  # - Loads data directly from CSV files
+│
+├── final_dataset/                 # NEW: Data directory
+│   ├── final_dataset_corrected.csv  # Company data (7 companies)
+│   └── profile_images.csv           # Founder profile images (12 images)
+│
+├── index.html                     # Legacy: Google Sheets dashboard
+├── editor.html                    # Legacy: Data editor interface
+├── mobile-test.html              # Mobile viewport testing page
+├── js/                           # Legacy: JavaScript modules
+│   ├── api-client.js             # API client for backend
+│   └── editor.js                 # Editor application logic
+├── backend/                      # Legacy: Flask API backend
+│   ├── app.py                    # Main Flask application
+│   ├── models.py                 # CSV CRUD operations
+│   ├── validators.py             # Input validation & security
+│   ├── config.py                 # Configuration settings
+│   ├── requirements.txt          # Python dependencies
+│   └── backups/                  # Automatic CSV backups
+├── sample-data.csv               # Legacy: 11-column format
+├── .gitignore                    # Git ignore rules
+├── README.md                     # User-facing documentation
 └── .claude/
-    ├── CLAUDE.md                  # This file (developer documentation)
-    └── settings.local.json        # Claude Code local settings
+    ├── CLAUDE.md                 # This file (developer documentation)
+    └── settings.local.json       # Claude Code local settings
 ```
 
 ## Data Schema (11-Column Structure - NEW in v2.2)
@@ -338,32 +346,39 @@ AI/ML, Biotech, Creative AI, Data Infrastructure, DevTools, Enterprise AI, Finte
 https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}
 ```
 
-## Development Workflow
+## Development Workflow (v3.0)
 
 ### Local Development
 
-**Option 1: Dashboard Only (No Editor)**
+**Simplified Dashboard (Recommended):**
 ```bash
-# Start frontend server
+# Start local web server
 python3 -m http.server 8000
 
-# Open dashboard: http://localhost:8000
-# Test mobile: http://localhost:8000/mobile-test.html
+# Open dashboard
+# http://localhost:8000/dashboard.html
 ```
 
-**Option 2: Full Stack (Dashboard + Editor)**
-```bash
-# Terminal 1: Start backend
-cd backend
-pip install -r requirements.txt
-python app.py
-# Backend runs at http://localhost:5000
+**That's it!** No backend, no dependencies, no build process.
 
-# Terminal 2: Start frontend
-python3 -m http.server 8000
-# Dashboard: http://localhost:8000/index.html
-# Editor: http://localhost:8000/editor.html
-```
+### Making Data Changes
+
+1. **Edit company data:**
+   ```bash
+   # Open in text editor or spreadsheet
+   open final_dataset/final_dataset_corrected.csv
+   ```
+
+2. **Add founder images:**
+   ```bash
+   # Add rows with: Person Name, LinkedIn URL, Image URL
+   open final_dataset/profile_images.csv
+   ```
+
+3. **Refresh dashboard:**
+   - Save CSV files
+   - Reload http://localhost:8000/dashboard.html
+   - Changes appear immediately
 
 ### Testing
 
@@ -538,10 +553,34 @@ FALLBACK_CSV: 'sample-data.csv',  // Change fallback CSV file
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 2.2 | 2026-01-28 | **Data Editor Release:** Web-based editor, Flask backend API, 11-column schema, badges, security features |
+| 3.0 | 2026-01-29 | **Simplified Static Dashboard:** Company logos, founder avatars, zero backend, single HTML file, CSV data source |
+| 2.2 | 2026-01-28 | Data Editor Release: Web-based editor, Flask backend API, 11-column schema, badges, security features |
 | 2.1 | 2026-01-28 | Added search debouncing, smart refresh, CSV fallback, .gitignore |
 | 2.0 | 2026-01 | Complete refactor with modular architecture, mobile fixes |
 | 1.0 | 2025-12 | Initial release with basic functionality |
+
+## Key Changes in v3.0
+
+### What's New
+1. **Company Logos:** Display company logos from image URLs
+2. **Founder Avatars:** Show founder profile images matched via LinkedIn URLs
+3. **Simplified Architecture:** Single HTML file, no backend needed
+4. **CSV Data Source:** Load directly from `final_dataset/` folder
+5. **Clean Card Layout:** Company logo at top, founders with avatars, funding badges
+
+### What Was Removed
+1. Google Sheets integration (no longer needed)
+2. Backend Flask server (no longer needed)
+3. Data editor (edit CSV files directly instead)
+4. Auto-refresh (reload page to see changes)
+5. Search/filter functionality (simplified to focus on display)
+
+### Benefits
+- **Faster Development:** No backend setup, just edit CSV files
+- **Easier Deployment:** Static HTML, deploy anywhere
+- **Better Performance:** No API calls, all data loaded once
+- **Simpler Maintenance:** Single file, easy to understand
+- **More Visual:** Company logos and founder photos
 
 ## Contact & Support
 

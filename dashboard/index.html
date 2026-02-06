@@ -260,10 +260,20 @@
 
             async loadData() {
                 // Load both CSV files
-                const [companiesText, imagesText] = await Promise.all([
-                    fetch('../final_dataset/final_dataset_corrected.csv').then(r => r.text()),
-                    fetch('../final_dataset/profile_images.csv').then(r => r.text())
+                const [companiesRes, imagesRes] = await Promise.all([
+                    fetch('../final_dataset/final_dataset_corrected.csv'),
+                    fetch('../final_dataset/profile_images.csv')
                 ]);
+
+                if (!companiesRes.ok) {
+                    throw new Error(`Failed to load company data: ${companiesRes.status} ${companiesRes.statusText}`);
+                }
+                if (!imagesRes.ok) {
+                    throw new Error(`Failed to load founder images: ${imagesRes.status} ${imagesRes.statusText}`);
+                }
+
+                const companiesText = await companiesRes.text();
+                const imagesText = await imagesRes.text();
 
                 // Parse founder images first
                 this.parseFounderImages(imagesText);

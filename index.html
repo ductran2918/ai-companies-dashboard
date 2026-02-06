@@ -637,9 +637,6 @@
         <header>
             <h1>AI Companies Founded by Chinese Entrepreneurs in Singapore</h1>
             <p class="subtitle">High-potential AI startups positioning for billion-dollar growth</p>
-            <div style="margin-bottom: 20px;">
-                <a href="editor.html" style="display: inline-block; padding: 8px 16px; background: #000; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px;">✏️ Edit Data</a>
-            </div>
             <div class="meta-info">
                 <div class="meta-item">
                     <span class="meta-label">Total Companies</span>
@@ -717,8 +714,8 @@
             AUTO_REFRESH_INTERVAL: 300000, // 5 minutes in milliseconds (300000ms = 5min)
             REQUIRED_FIELD: 'Company Name',
             SEARCH_DEBOUNCE_MS: 150, // Debounce delay for search input (milliseconds)
-            FALLBACK_CSV: 'sample-data.csv', // Fallback CSV if Google Sheets fails (11-column format)
-            API_BASE_URL: 'http://localhost:5000/api' // Backend API for editor
+            FALLBACK_CSV: 'final_dataset/final_dataset_corrected.csv', // Fallback CSV if Google Sheets fails
+            API_BASE_URL: 'http://localhost:5001/api' // Backend API for editor (port 5001 to avoid macOS AirPlay conflict)
         };
 
         /**
